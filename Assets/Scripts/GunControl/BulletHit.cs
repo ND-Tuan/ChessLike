@@ -18,7 +18,7 @@ public class BulletHit : MonoBehaviour
             _enemyController = other.gameObject.GetComponent<EnemyController>();
             if(_enemyController == null) return;
 
-            _enemyController.TakeDamage(Dmg);
+            _enemyController.TakeDamage(Dmg, transform.forward);
         }
         //Bắn vào người chơi
         else if(!PlayerBullet){

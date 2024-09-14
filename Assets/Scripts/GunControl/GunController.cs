@@ -26,8 +26,8 @@ public class GunController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // _handleAnimator = GetComponentInParent<Animator>();
-        // _gunAnimator = GetComponent<Animator>();
+        _handleAnimator = GetComponentInParent<Animator>();
+        _gunAnimator = GetComponent<Animator>();
 
         _User = transform.parent;
         if(_IsPlayer){
@@ -62,14 +62,14 @@ public class GunController : MonoBehaviour
         rb.AddForce(_FirePos.transform.right * _BulletForce, ForceMode.Impulse);  //Gắn vector lực
             
 
-        // //chạy Animation giật
-        // _handleAnimator.Play("GunRecoil", -1, 0f);
+        //chạy Animation giật
+        _handleAnimator.Play("GunRecoil", -1, 0f);
 
-        // //Điều chỉnh tốc độ chạy Animation
-        // if(_CoolDown.getCD()<0.25)
-        //     _handleAnimator.SetFloat("SpeedCoef", 1/_CoolDown.getCD());
-        // else
-        //     _handleAnimator.SetFloat("SpeedCoef", 4);
+        //Điều chỉnh tốc độ chạy Animation
+        if(_CoolDown.getCD()<0.25)
+            _handleAnimator.SetFloat("SpeedCoef", 1/_CoolDown.getCD());
+        else
+            _handleAnimator.SetFloat("SpeedCoef", 4);
 
         _CoolDown.StartCooldown();
     }

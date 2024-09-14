@@ -125,7 +125,7 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    public void TakeDamage(int Dmg){
+    public void TakeDamage(int Dmg, Vector3 hitPoint){
         
         if(_agent.enabled ==false) return;
 
@@ -135,6 +135,16 @@ public class EnemyController : MonoBehaviour
 
         if(_CurrentHp >0) return;
         _CurrentHp = _MaxHp;
+
+        GameObject corpse = ObjectPoolManager.Instance.GetObject("EnemyCorpse");
+        if(corpse == null) return;
+
+        corpse.SetActive(true);
+        corpse.GetComponent<Collider>().isTrigger = false;
+        corpse.transform.position = transform.position;
+        corpse.GetComponent<MeshFilter>().mesh = GetComponent<MeshFilter>().mesh;
+        corpse.GetComponent<Rigidbody>().AddForce(hitPoint * 3, ForceMode.Impulse);
+
         GetComponent<ActiveEnemy>().enabled = true;
         enabled = false;
         gameObject.SetActive(false);
