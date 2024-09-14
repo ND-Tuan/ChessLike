@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d531ad22a1d18b640804e2adc0d08f4c, type: 3}
+  m_Name: Store
+  m_EditorClassIdentifier: 
+  BoardIcon: {fileID: 2100000, guid: 6f3d2e6147d362d49af707da335b3bff, type: 2}
+  Message: Store
+  Prefab: {fileID: 4164809442238846444, guid: 5673fcf7d3c474f4fb3a785815627c0b, type: 3}
