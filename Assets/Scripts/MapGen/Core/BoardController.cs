@@ -6,7 +6,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class EnemyWaveSetting {
-    [Range(1,5)]
+    [Range(0,2)]
     public int DifficultLevel;
     [Range(1,5)]
     public int NumberOfWaves;
@@ -47,11 +47,6 @@ public class BoardController : MonoBehaviour
         _Options.SetActive(false);
     }
 
-    public void SetupWave(EnemyWaveSetting waveSetting){
-        for(int i = 0; i < waveSetting.NumberOfWaves; i++){
-            SpawnEnermy(waveSetting.NumberEnemiesOfWave[i], i+1);
-        }
-    }
 
     public void PrepareCombat(EnemyWaveSetting waveSetting){
         StartCoroutine(StartWave(waveSetting));

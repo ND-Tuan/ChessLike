@@ -12,6 +12,7 @@ public class MapMaker : MonoBehaviour
     [SerializeField] private List<GameObject> _SpecificBoardList;
     [SerializeField] private List<GameObject> _BossBoardList;
     [SerializeField] private GameObject RestBoard;
+    [SerializeField] private GameObject CombatCheck;
     [SerializeField] private GameObject surface;
 
     private GameObject _CurrentActiveBoard;
@@ -22,7 +23,6 @@ public class MapMaker : MonoBehaviour
     void Start()
     {
         _CurrentActiveBoard = GameObject.FindGameObjectWithTag("Basic Board");
-        _CurrentActiveBoard.GetComponent<BoardController>().PrepareCombat(GameManager.Instance._enemyWaveSetting[0]);
 
         //load thông tin các ải chơi
         _SpecificBoardInfo = Resources.LoadAll<SpecificBoard>("SpecificBoard"); 
@@ -37,12 +37,8 @@ public class MapMaker : MonoBehaviour
         //Đăng ký Event
         Observer.AddListener(EvenID.BoardPrepare, PrepareBoard);
         Observer.AddListener(EvenID.BoardDone, PrepareRandomOptions);
+        Observer.AddListener(EvenID.BeginCombat, OnBeginCombat);
 
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     //Random các ải chơi tiếp theo
@@ -78,6 +74,7 @@ public class MapMaker : MonoBehaviour
 
         }else{
             newPos = _CurrentActiveBoard.transform.position + new Vector3(60, 0, 60);
+          
         }
     
         // Chọn ngẫu nhiên một ải chưa được kích hoạt từ danh sách 
@@ -91,17 +88,25 @@ public class MapMaker : MonoBehaviour
         _BasicBoardList[_randomInt].SetActive(true);
         _BasicBoardList[_randomInt].transform.position = newPos;
         if(Diraction == TeleportDiraction.Combat){
-            _BasicBoardList[_randomInt].GetComponent<BoardController>().PrepareCombat(GameManager.Instance._enemyWaveSetting[0]);
+             CombatCheck.SetActive(true);
+            CombatCheck.transform.position = newPos;
         }
     
         // Cập nhật vị trí và tạo lại NavMesh
         surface.transform.position = newPos;
         surface.GetComponent<NavMeshSurface>().BuildNavMesh();
     
-        GameManager.Instance._CurrentProsses ++;
-    
         // Gọi hàm để vô hiệu hóa ải trước đó sau 0.5 giây
         Invoke(nameof(DeActivePreviousBoard), 0.5f);
+    }
+
+    private void OnBeginCombat(object[] data)
+    {
+        int _currentDifficult = GameManager.Instance._CurrentProsses - 1;
+        EnemyWaveSetting _waves = GameManager.Instance._enemyWaveSetting[_currentDifficult];
+        _waves.DifficultLevel = _currentDifficult;
+        
+        _BasicBoardList[_randomInt].GetComponent<BoardController>().PrepareCombat(_waves);
     }
 
     void OnDestroy()
@@ -109,6 +114,7 @@ public class MapMaker : MonoBehaviour
         //Hủy đăng ký Event
         Observer.RemoveListener(EvenID.BoardPrepare, PrepareBoard);
         Observer.RemoveListener(EvenID.BoardDone, PrepareRandomOptions);
+        Observer.RemoveListener(EvenID.BeginCombat, PrepareBoard);
     }
     
     void DeActivePreviousBoard()

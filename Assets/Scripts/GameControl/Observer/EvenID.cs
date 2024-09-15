@@ -10,6 +10,7 @@ public enum EvenID
     DisplayEnemyHp,
 
     //Game
+    BeginCombat,
     BoardPrepare,
     BoardDone
     

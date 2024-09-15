@@ -7,6 +7,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour 
 {
     public int EnemyCounter { get; private set; }
+    public float[] EnemyLevelUpScale;
     public int _NumBoardBeforeBoss = 3;
     public int _CurrentProsses = 1;
     public List<EnemyWaveSetting> _enemyWaveSetting;

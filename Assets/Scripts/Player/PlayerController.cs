@@ -153,6 +153,8 @@ public class PlayerController : MonoBehaviour
             }
         } else _CurrentHp -= Dmg;
 
+        Observer.PostEvent(EvenID.DisplayDamagePopup, Dmg, transform.position);
+
         Observer.PostEvent(EvenID.DisplayPlayerHP, _CurrentHp, _MaxHp, Dmg);
 
         if(_CurrentHp <=0){

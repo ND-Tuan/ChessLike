@@ -5,17 +5,22 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
-public class GunController : MonoBehaviour
+public class GunController : MonoBehaviour, IEnemyAttack
 {
-    [Header("-----Gun Status------")]
-    [SerializeField] private bool _1HandGun;
+    [Header("-----Gun Info------")]
+    [SerializeField] private Sprite Icon;
+    [SerializeField] private string Name;
+    [SerializeField] private int Cost;
+    [SerializeField] private int AmmoCapacity;
     [SerializeField] private Cooldown _CoolDown;
+    
     [SerializeField] private float  _BulletForce;
     [SerializeField] private int  _Dmg;
     [SerializeField] private int  _CritDmg;
     [SerializeField] private Mesh _BulletMesh;
-
+    [SerializeField] private bool _1HandGun;
     [SerializeField] private Transform _FirePos;
+    public float Multiplier = 1;
 
     public bool _IsPlayer = true;
     private Transform _User;
@@ -43,7 +48,7 @@ public class GunController : MonoBehaviour
         }
     }
 
-    public void Fire(){
+    private void Fire(){
         GameObject BulletTmp = ObjectPoolManager.Instance.GetObject("Bullet");
 
         if(BulletTmp == null) return;
@@ -54,7 +59,7 @@ public class GunController : MonoBehaviour
         BulletTmp.GetComponentInChildren<TrailRenderer>().Clear();    //đặt lại effect
         BulletTmp.GetComponentInChildren<MeshFilter>().mesh = _BulletMesh;   //Đổi loại đạn
 
-        BulletTmp.GetComponent<BulletHit>().Dmg = _Dmg;
+        BulletTmp.GetComponent<BulletHit>().Dmg = (int)(_Dmg * Multiplier);
         BulletTmp.GetComponent<BulletHit>().PlayerBullet = _IsPlayer;
 
         Rigidbody rb = BulletTmp.GetComponent<Rigidbody>();
@@ -77,4 +82,26 @@ public class GunController : MonoBehaviour
     public bool GetStyle(){
         return _1HandGun;
     }
+
+    public void Attack(float multiplier)
+    {
+        if(_IsPlayer) return;
+           
+        Multiplier = multiplier;
+        Fire();
+    }
+
+    public object[] GetInfo(){
+        object[] info = new object[7];
+
+        info[0] = Icon;
+        info[1] = Name;
+        info[2] = _Dmg;
+        info[3] = _CritDmg;
+        info[4] = _CoolDown.getCD();
+        info[5] = AmmoCapacity;
+        info[6] = Cost;
+        
+        return info;
+    } 
 }

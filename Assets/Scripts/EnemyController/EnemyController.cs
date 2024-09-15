@@ -12,7 +12,8 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private int _MaxHp;
     [SerializeField] private int _CurrentHp;
-    [Range(1,3)] public int EnermyLevel;
+     public int EnermyLevel;
+    private float[] _LevelUpScale = {1, 2, 3};
 
     [Header("---Enemy AI--------------------------")]
 
@@ -38,12 +39,14 @@ public class EnemyController : MonoBehaviour
 
         _PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
+        _LevelUpScale = GameManager.Instance.EnemyLevelUpScale;
         
     }
 
-    void Start()
+    void OnEnable()
     {
-        _CurrentHp = _MaxHp;
+
+        _CurrentHp = (int)(_MaxHp * _LevelUpScale[EnermyLevel]);
     }
 
     private void Update()
@@ -111,9 +114,7 @@ public class EnemyController : MonoBehaviour
         transform.LookAt(_PlayerTransform);
 
         if (alreadyAttacked) return;
-    
-        GetComponentInChildren<GunController>().Fire();
-            
+        GetComponentInChildren<IEnemyAttack>().Attack(_LevelUpScale[EnermyLevel]);
 
         alreadyAttacked = true;
         Invoke(nameof(ResetAttack), timeBetweenAttacks);
@@ -127,27 +128,38 @@ public class EnemyController : MonoBehaviour
 
     public void TakeDamage(int Dmg, Vector3 hitPoint){
         
-        if(_agent.enabled ==false) return;
+        if (_agent.enabled == false) return; //kt agent 
+        
+        // Nhận Damage 
+        _CurrentHp -= Dmg; 
 
-        _CurrentHp -=Dmg;
-
+         //Hiển thị Popup Damage
         Observer.PostEvent(EvenID.DisplayDamagePopup, Dmg, transform.position);
-
-        if(_CurrentHp >0) return;
-        _CurrentHp = _MaxHp;
-
+        
+        //Knockback
+        GetComponent<Rigidbody>().AddForce(hitPoint * 3, ForceMode.Impulse);
+        
+        //Kiểm tra HP còn lại
+        if (_CurrentHp > 0) return; 
+        
+        // Nếu HP về 0:
+        
+        //Sinh ra thi thể
         GameObject corpse = ObjectPoolManager.Instance.GetObject("EnemyCorpse");
-        if(corpse == null) return;
-
+        if (corpse == null) return;
+        
         corpse.SetActive(true);
-        corpse.GetComponent<Collider>().isTrigger = false;
-        corpse.transform.position = transform.position;
+        corpse.GetComponent<Collider>().isTrigger = false; 
+        corpse.transform.position = transform.position;    
         corpse.GetComponent<MeshFilter>().mesh = GetComponent<MeshFilter>().mesh;
-        corpse.GetComponent<Rigidbody>().AddForce(hitPoint * 3, ForceMode.Impulse);
 
-        GetComponent<ActiveEnemy>().enabled = true;
-        enabled = false;
-        gameObject.SetActive(false);
+        //Knockback
+        corpse.GetComponent<Rigidbody>().AddForce(hitPoint * 3, ForceMode.Impulse); 
+
+        //Vô hiệu hóa enemy
+        GetComponent<ActiveEnemy>().enabled = true; 
+        enabled = false; 
+        gameObject.SetActive(false); 
     }
 
 
