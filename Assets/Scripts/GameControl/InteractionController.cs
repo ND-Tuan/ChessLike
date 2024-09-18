@@ -46,8 +46,14 @@ public class InteractionController : MonoBehaviour
 
                 _interactionUI.SetActive(false);
             }
+
+            if(!_nearestCollider.gameObject.activeInHierarchy){
+                _playerNearObject = false;
+                _interactionUI.SetActive(false);
+            }
         }
 
+        
         // Bắt đầu hoặc kết thúc tương tác dựa trên khoảng cách
         if (_playerNearObject && !_isInteracting)
         {

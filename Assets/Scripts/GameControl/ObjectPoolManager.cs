@@ -19,16 +19,14 @@ public class ObjectPoolManager : MonoBehaviour
 {
     public static ObjectPoolManager Instance { get; private set; }
     [SerializeField] private List<PoolObjects> Objects;
-    [SerializeField] private List<GameObject> poolObjects;
     [SerializeField] private List<ParentList> PoolList;
     
     void Awake()
     {
         Instance =this;
-        poolObjects = new List<GameObject>();
         PoolList = new List<ParentList>();
     
-        // Duyệt qua từng đối tượng trong danh sách Objects
+        // Khởi tạo danh sách các đối tượng trong pool
         foreach (PoolObjects obj in Objects)
         {
             ParentList parentListElement = new();
@@ -44,11 +42,6 @@ public class ObjectPoolManager : MonoBehaviour
             }
             Instance.PoolList.Add(parentListElement);
         }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Khởi tạo danh sách các đối tượng trong pool
         
     }
     

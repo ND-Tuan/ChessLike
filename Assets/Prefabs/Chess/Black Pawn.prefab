@@ -405,7 +405,7 @@ MonoBehaviour:
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 5
   _waitTime:
-    _cooldownTime: 3
+    _cooldownTime: 2
   timeBetweenAttacks: 0.5
   sightRange: 16
   attackRange: 12

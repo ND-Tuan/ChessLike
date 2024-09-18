@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour 
 {
+    [SerializeField] private int _BeginningCoin;
+    [SerializeField] private int _MaxAmmo;
+    [SerializeField] private GameObject Chest;
     public int EnemyCounter { get; private set; }
     public float[] EnemyLevelUpScale;
     public int _NumBoardBeforeBoss = 3;
@@ -27,6 +30,11 @@ public class GameManager : MonoBehaviour
         } else if (Instance != this){
             Destroy(gameObject);
         }
+
+        //Khởi tạo dữ liệu
+        CoinAndAmmoManager.AddCoins(_BeginningCoin);
+        CoinAndAmmoManager.SetMaxAmmo(_MaxAmmo);
+        CoinAndAmmoManager.AddAmmo(_MaxAmmo);
     }
 
     void Start()
@@ -39,6 +47,8 @@ public class GameManager : MonoBehaviour
  
     public void OnBoardDone(object[] data){
        _CurrentProsses++;
+       Chest.SetActive(true);
+       Chest.transform.position = (Vector3)data[0];
        BoardDone = false;
     }
 

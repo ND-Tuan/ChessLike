@@ -111,13 +111,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44f1d497ad02d3344b2ec1e26c010217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _1HandGun: 0
-  _CoolDown:
-    _cooldownTime: 0.2
+  Icon: {fileID: 0}
+  Name: 
+  Cost: 0
+  AmmoCapacity: 0
+  _FireRate:
+    _cooldownTime: 0.25
   _BulletForce: 20
   _Dmg: 50
   _CritDmg: 0
   _BulletMesh: {fileID: 4300000, guid: 0c877f51dbe8b0c489b6e705c0a8f49b, type: 2}
+  _1HandGun: 0
   _FirePos: {fileID: 4945640403436843757}
   _IsPlayer: 0
 --- !u!1 &3487495856633903114
@@ -585,7 +589,7 @@ MonoBehaviour:
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 5
   _waitTime:
-    _cooldownTime: 3
+    _cooldownTime: 2
   timeBetweenAttacks: 0.5
   sightRange: 16
   attackRange: 12

@@ -64,7 +64,7 @@ public class BoardController : MonoBehaviour
             //yield return new WaitForSeconds(5);
         }
 
-        Observer.PostEvent(EvenID.BoardDone);
+        Observer.PostEvent(EvenID.BoardDone, transform.position);
     }
 
     private void SpawnEnermy(int quantity, int difficultLevel){

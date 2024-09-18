@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="GunInfo", menuName = "ScriptableObject/GunInfo")]
-public class GunInfo : ScriptableObject
+
+public class GunInfo
 {
     public Sprite Icon;
     public string Name;

@@ -57,10 +57,11 @@ public class EnemyController : MonoBehaviour
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, PlayerLayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
 
-        directionToPlayer = (_PlayerTransform.position - transform.position).normalized;
+        directionToPlayer = (_PlayerTransform.position - transform.position).normalized + new Vector3(0, 0.5f, 0);
 
         Ray ray = new(transform.position, directionToPlayer);
         if (Physics.Raycast(ray, out RaycastHit hit)){
+            Debug.Log(hit.collider.name);
             if (!hit.collider.CompareTag("Player")){
 
                 playerInSightRange = false;

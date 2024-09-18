@@ -2,18 +2,27 @@
 
 public enum EvenID 
 {
-    //UI
+    //Status UI
     DisplayPlayerHP,
     DisplayAmor,
-    DisplayAmmo,
     DisplayDamagePopup,
     DisplayEnemyHp,
+    DisplayCoin,
+    DisplayCurrentGunIcon,
+    DisplayPlayerAmmo,
+    DisplayReloadProgress,
+
+    //Menu UI
+    DisplayGunStoreUI,
 
     //Game
     BeginCombat,
     BoardPrepare,
-    BoardDone
-    
+    BoardDone,
+    DropGun,
+    DeActiveDropObject,
+
+
 
 
     //Audio
