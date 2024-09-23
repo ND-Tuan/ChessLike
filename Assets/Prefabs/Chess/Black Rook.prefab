@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44f1d497ad02d3344b2ec1e26c010217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Model: {fileID: 0}
   Icon: {fileID: 0}
   Name: 
   Cost: 0
@@ -523,7 +524,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5486592252770132317}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -552,7 +553,7 @@ NavMeshAgent:
   m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.44786
-  m_Speed: 3
+  m_Speed: 2.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -576,9 +577,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98febdb5d0edfd64ea353b2d67f1198b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MaxHp: 100
+  _MaxHp: 250
   _CurrentHp: 0
   EnermyLevel: 0
+  _MaxDropAmount: 0
   _agent: {fileID: 4850928386452365029}
   Surface:
     serializedVersion: 2
@@ -590,9 +592,9 @@ MonoBehaviour:
   walkPointRange: 5
   _waitTime:
     _cooldownTime: 2
-  timeBetweenAttacks: 0.5
+  timeBetweenAttacks: 1
   sightRange: 16
-  attackRange: 12
+  attackRange: 8
 --- !u!114 &1801619004237877220
 MonoBehaviour:
   m_ObjectHideFlags: 0

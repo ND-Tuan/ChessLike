@@ -53,24 +53,24 @@ public class Teleporter : MonoBehaviour, IInteractable
     }
 
 
-    async void  CamZoomIn(){
+    // async void  CamZoomIn(){
        
-        while(virtualCamera.m_Lens.OrthographicSize > 6){
-            virtualCamera.m_Lens.OrthographicSize -=0.3f;
-            await Task.Delay(1);
-        }
-        virtualCamera.m_Lens.OrthographicSize = 6;
-    }
+    //     while(virtualCamera.m_Lens.OrthographicSize > 6){
+    //         virtualCamera.m_Lens.OrthographicSize -=0.3f;
+    //         await Task.Delay(1);
+    //     }
+    //     virtualCamera.m_Lens.OrthographicSize = 6;
+    // }
 
-    async void  CamZoomOut(){
+    // async void  CamZoomOut(){
        
-        while(virtualCamera.m_Lens.OrthographicSize <= 20){
-            virtualCamera.m_Lens.OrthographicSize +=0.2f;
-            await Task.Delay(1);
-        }
+    //     while(virtualCamera.m_Lens.OrthographicSize <= 20){
+    //         virtualCamera.m_Lens.OrthographicSize +=0.2f;
+    //         await Task.Delay(1);
+    //     }
 
         
-    }
+    // }
 
 
 }

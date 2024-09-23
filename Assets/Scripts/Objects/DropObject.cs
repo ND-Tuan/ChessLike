@@ -10,11 +10,20 @@ public class DropObject : MonoBehaviour, IInteractable
     private List<GameObject> _ModelList = new();
     private List<int> _GunIDList = new List<int>();
     [SerializeField] private GameObject _Model;
+     [SerializeField] private LayerMask _Surface;
 
     void Start()
     {
         //Đăng ký Event
         Observer.AddListener(EvenID.DeActiveDropObject, OnDeActiveDropObject);
+    }
+
+    void Update()
+    {
+        if(Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position) > 30f)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnDeActiveDropObject(object[] obj)

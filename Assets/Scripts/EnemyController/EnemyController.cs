@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using ObserverPattern;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -12,8 +13,9 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private int _MaxHp;
     [SerializeField] private int _CurrentHp;
-     public int EnermyLevel;
+    public int EnermyLevel;
     private float[] _LevelUpScale = {1, 2, 3};
+    [SerializeField] private int _MaxDropAmount;
 
     [Header("---Enemy AI--------------------------")]
 
@@ -34,18 +36,23 @@ public class EnemyController : MonoBehaviour
     [SerializeField]private float sightRange, attackRange;
     private bool alreadyAttacked;
     private bool playerInSightRange, playerInAttackRange;
-    
-    void Awake(){
 
+    private bool _DisplayHpBar = false;
+
+    private GameObject _HpBar;
+
+
+    void Awake(){
+        //Dang ky su kien
         _PlayerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
-        _LevelUpScale = GameManager.Instance.EnemyLevelUpScale;
+        
         
     }
 
     void OnEnable()
     {
-
+        _LevelUpScale = GameManager.Instance.EnemyLevelUpScale;
         _CurrentHp = (int)(_MaxHp * _LevelUpScale[EnermyLevel]);
     }
 
@@ -53,6 +60,14 @@ public class EnemyController : MonoBehaviour
     {
        
         _agent.enabled = true;
+
+        if(_DisplayHpBar){
+            if(_HpBar == null) return;
+            _HpBar.transform.position = transform.position + new Vector3(0, 1.5f, 0);
+            
+            _HpBar.GetComponent<Slider>().value = _CurrentHp;
+        }
+
         //Kiểm tra Player có trong tầm nhìn và tầm tấn công
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, PlayerLayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
@@ -61,7 +76,6 @@ public class EnemyController : MonoBehaviour
 
         Ray ray = new(transform.position, directionToPlayer);
         if (Physics.Raycast(ray, out RaycastHit hit)){
-            Debug.Log(hit.collider.name);
             if (!hit.collider.CompareTag("Player")){
 
                 playerInSightRange = false;
@@ -135,15 +149,36 @@ public class EnemyController : MonoBehaviour
         _CurrentHp -= Dmg; 
 
          //Hiển thị Popup Damage
-        Observer.PostEvent(EvenID.DisplayDamagePopup, Dmg, transform.position);
+        Observer.PostEvent(EvenID.DisplayTextPopup, Dmg, transform.position, Color.red);
+
+        //Hiển thị HP bar
+        if (!_DisplayHpBar){
+            _HpBar = ObjectPoolManager.Instance.GetObject("EnemyHPBar");
+            _HpBar.SetActive(true);
+            _HpBar.GetComponent<Slider>().maxValue = _MaxHp * _LevelUpScale[EnermyLevel];
+            _DisplayHpBar = true;
+
+        }
         
         //Knockback
-        GetComponent<Rigidbody>().AddForce(hitPoint * 3, ForceMode.Impulse);
+        if(hitPoint != null)
+            GetComponent<Rigidbody>().AddForce(hitPoint * 3, ForceMode.Impulse);
         
         //Kiểm tra HP còn lại
         if (_CurrentHp > 0) return; 
         
         // Nếu HP về 0:
+        _CurrentHp = 0;
+        _HpBar.SetActive(false);
+        isDead(hitPoint);
+        
+        
+        
+    }
+
+
+    private void isDead(Vector3 hitPoint){
+        
         
         //Sinh ra thi thể
         GameObject corpse = ObjectPoolManager.Instance.GetObject("EnemyCorpse");
@@ -155,13 +190,43 @@ public class EnemyController : MonoBehaviour
         corpse.GetComponent<MeshFilter>().mesh = GetComponent<MeshFilter>().mesh;
 
         //Knockback
-        corpse.GetComponent<Rigidbody>().AddForce(hitPoint * 3, ForceMode.Impulse); 
+        if(hitPoint != null)
+            corpse.GetComponent<Rigidbody>().AddForce(hitPoint * 3, ForceMode.Impulse); 
+
+        //Rơi item
+        Drop(Random.Range(1, _MaxDropAmount), "Coin");
+        Drop(Random.Range(1, _MaxDropAmount), "Ammo");
+
+        //Xử lý buff
+        if(GameManager.Instance._HasSoulEatingBuff){
+            Drop(1, "Soul");
+        }
 
         //Vô hiệu hóa enemy
         GetComponent<ActiveEnemy>().enabled = true; 
         enabled = false; 
         gameObject.SetActive(false); 
     }
+
+
+    private void Drop(int amount, string tag){
+        for (int i = 0; i < amount; i++){
+            GameObject Tmp = ObjectPoolManager.Instance.GetObject(tag);
+            if(Tmp == null) return;
+
+            Tmp.SetActive(true);
+            Tmp.transform.position = transform.position + new Vector3(0, 0.7f, 0);
+
+            Rigidbody rb = Tmp.GetComponent<Rigidbody>();
+
+            if(rb == null) return;
+            Vector3 randomUpDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1f), Random.Range(-1f, 1f)).normalized;
+            float randomForce = Random.Range(5f, 10f);
+            rb.AddForce(randomUpDirection * randomForce, ForceMode.Impulse);
+            Tmp.SetActive(true);
+        }
+    }
+
 
 
     private void OnDrawGizmosSelected()
@@ -173,8 +238,10 @@ public class EnemyController : MonoBehaviour
        
     }
 
+
     void OnDisable()
     {
         _agent.enabled = false;
+        _DisplayHpBar = false;
     }
 }

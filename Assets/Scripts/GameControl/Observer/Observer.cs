@@ -36,7 +36,7 @@ namespace ObserverPattern{
             }
         }
     }
-}
-}
 
+}
+}
 

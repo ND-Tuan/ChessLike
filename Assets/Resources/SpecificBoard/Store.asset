@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BoardIcon: {fileID: 2100000, guid: 6f3d2e6147d362d49af707da335b3bff, type: 2}
   Message: Store
-  Prefab: {fileID: 4164809442238846444, guid: 5673fcf7d3c474f4fb3a785815627c0b, type: 3}
+  Prefab: {fileID: 6847920439747879845, guid: dea5326c2484f5f43aa0ef10f19d5d76, type: 3}

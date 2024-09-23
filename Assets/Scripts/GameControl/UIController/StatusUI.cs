@@ -32,7 +32,7 @@ public class StatusUI : MonoBehaviour
         Observer.AddListener(EvenID.DisplayReloadProgress, OnDisplayReloadProgress);
 
             //Enemy
-        Observer.AddListener(EvenID.DisplayDamagePopup, OnDisplayDamagePopup);
+        Observer.AddListener(EvenID.DisplayTextPopup, OnDisplayTextPopup);
 
             //Status
         Observer.AddListener(EvenID.DisplayCoin, OnDisplayCoin);
@@ -102,21 +102,24 @@ public class StatusUI : MonoBehaviour
     }
 
 
-    private void OnDisplayDamagePopup(object[] data)
+    private void OnDisplayTextPopup(object[] data)
     {
         string text = data[0].ToString();
         Vector3 position = (Vector3)data[1];
+
+        Color color = (Color)data[2];
        
-        TextPopup(text, position, 0.25f, 0.3f, 1);
+        TextPopup(text, position, 0.25f, 0.3f, 1, color);
         
     }
 
-    void TextPopup(string text, Vector3 position, float hight, float RandomRange, float scale){
+    void TextPopup(string text, Vector3 position, float hight, float RandomRange, float scale, Color color){
 
         GameObject textPopup = ObjectPoolManager.Instance.GetObject("PopupText");
         textPopup.SetActive(true);
 
         textPopup.GetComponent<TextMeshProUGUI>().text = text;
+        textPopup.GetComponent<TextMeshProUGUI>().color = color;
         textPopup.transform.localScale = Vector3.one * scale;
 
         if(RandomRange == 0) return;
@@ -124,16 +127,12 @@ public class StatusUI : MonoBehaviour
                         + new Vector3(Random.Range(-RandomRange,RandomRange),hight,Random.Range(-RandomRange,RandomRange));
     }
 
-    private int  AnimateCount(int start, int end, float progress)
-    {
-        int value = (int)Mathf.Lerp(start, end, progress);
-        return value;
-    }
+    
 
     void OnDestroy()
     {
         Observer.RemoveListener(EvenID.DisplayPlayerHP, OnDisplayPlayerHp);
-        Observer.RemoveListener(EvenID.DisplayDamagePopup, OnDisplayDamagePopup);
+        Observer.RemoveListener(EvenID.DisplayTextPopup, OnDisplayTextPopup);
         Observer.RemoveListener(EvenID.DisplayCoin, OnDisplayCoin);
         Observer.RemoveListener(EvenID.DisplayCurrentGunIcon, OnDisplayCurrentGunIcon);
     }

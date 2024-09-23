@@ -102,6 +102,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _GunID: 0
   _Model: {fileID: 201933475265232911}
+  _Surface:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!65 &2118539951093428325
 BoxCollider:
   m_ObjectHideFlags: 0

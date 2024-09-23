@@ -11,6 +11,7 @@ public class SelfDeactive : MonoBehaviour
 
    public void IsTrigger(){
      gameObject.GetComponent<Collider>().isTrigger = true;
+     
    }
 
 

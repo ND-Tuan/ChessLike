@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 6199648610996497379}
   m_Layer: 0
   m_Name: Plane (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -839,7 +839,7 @@ GameObject:
   - component: {fileID: 5977914998673566757}
   m_Layer: 0
   m_Name: Plane (3)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1547,18 +1547,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Options: {fileID: 2174296674469247303}
-  optionInfo:
-  - _OptionsImg: {fileID: 2100000, guid: aa05e2cb4a8dcdc479c5023fccc5e443, type: 2}
-    _Message: Combat
-  - _OptionsImg: {fileID: 2100000, guid: f71199c53f4f27e4a9238cd9fea9050f, type: 2}
-    _Message: Enchantment
-  - _OptionsImg: {fileID: 2100000, guid: 6f3d2e6147d362d49af707da335b3bff, type: 2}
-    _Message: Store
-  - _OptionsImg: {fileID: 2100000, guid: 817fb6758551b3040bb8c59af55e921f, type: 2}
-    _Message: Arsenal
   _OptionsDisplay:
   - {fileID: 86486607195881755}
   - {fileID: 8508463845059504763}
+  teleporter: []
 --- !u!1 &4394102974620338255
 GameObject:
   m_ObjectHideFlags: 0
@@ -1862,7 +1854,7 @@ GameObject:
   - component: {fileID: 4627477152508366641}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2518,7 +2510,7 @@ GameObject:
   - component: {fileID: 8819572006335601539}
   m_Layer: 0
   m_Name: Plane (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3108,6 +3100,10 @@ PrefabInstance:
     - target: {fileID: 5753651481965312964, guid: 5416db02e4eea20489508a0fe3d18738, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5753651481965312964, guid: 5416db02e4eea20489508a0fe3d18738, type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     - target: {fileID: 8032817890336658422, guid: 5416db02e4eea20489508a0fe3d18738, type: 3}
       propertyPath: m_LocalScale.x

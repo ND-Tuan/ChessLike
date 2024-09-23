@@ -47,7 +47,17 @@ public class ObjectPoolManager : MonoBehaviour
     
     // Lấy object từ pool
     public GameObject GetObject(string tag)
-    {
+    {   
+        if(GetAllObjects(tag).Count == 0){
+            for(int i = 0; i < PoolList.Count; i++){
+                if(PoolList[i].ListTag == tag){
+                    GameObject ObjTmp = Instantiate(Objects[i].prefab, Objects[i].parent.transform);
+                    ObjTmp.SetActive(false);
+                    PoolList[i].poolObjects.Add(ObjTmp);
+                    return ObjTmp;
+                }
+            }
+        }
         // Tìm đối tượng không hoạt động trong pool theo tag
         foreach (ParentList list in PoolList)
         {

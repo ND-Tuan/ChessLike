@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BoardIcon: {fileID: 2100000, guid: f71199c53f4f27e4a9238cd9fea9050f, type: 2}
   Message: Enchantment
-  Prefab: {fileID: 7850294580779597231, guid: 38b7f707b2dad344c8ce1b103b50986f, type: 3}
+  Prefab: {fileID: 5658765877849911151, guid: 19eafa2f1d0b57540a3164b351306613, type: 3}

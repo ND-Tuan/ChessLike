@@ -94,10 +94,6 @@ public class HolderController : MonoBehaviour
         Observer.PostEvent(EvenID.DisplayPlayerAmmo, _OwnGuns[id].GetComponent<GunController>().GetRemainAmmo());
     }
 
-    public void ReloadGun(){   //Nạp đạn
-        
-    }
-
     public List<GameObject> GetGunList(){
         return _GunList;
     }

@@ -72,7 +72,12 @@ public class InteractionController : MonoBehaviour
         
 
         if(_interactable == null) return;
+
+        if(_interactable.InteractMessage == null) 
+            _interactionUI.SetActive(false);
+
         _interactMessage.text = _interactable.InteractMessage;
+
         if(Input.GetKeyDown(KeyCode.F)){
             _interactable.TakeAction();
             _isInteracting = true;

@@ -59,12 +59,11 @@ public class BoardController : MonoBehaviour
         for(int i = 0; i < waveSetting.NumberOfWaves; i++){
 
             SpawnEnermy(waveSetting.NumberEnemiesOfWave[i], waveSetting.DifficultLevel);
-            Debug.Log("Wave " + i);
             yield return new WaitUntil(() => GameObject.FindGameObjectWithTag("Enemy") == null);
             //yield return new WaitForSeconds(5);
         }
 
-        Observer.PostEvent(EvenID.BoardDone, transform.position);
+        Observer.PostEvent(EvenID.CombatDone, transform.position);
     }
 
     private void SpawnEnermy(int quantity, int difficultLevel){

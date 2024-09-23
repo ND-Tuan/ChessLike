@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using ObserverPattern;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,7 +22,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _DashSpeed;
     [SerializeField] private Cooldown _DashCD;
     [SerializeField] private float _DashTime;
-    [SerializeField] private GameObject DashGhost;
     private bool _isDashing;
     private float _DashTimeCD;
     
@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveInput;
 
     private Animator _animator;
+    [SerializeField] private GameObject _Model;
+    private GameObject _Hand;
 
 
     [Header("-------------------")]
@@ -43,10 +45,16 @@ public class PlayerController : MonoBehaviour
         _CurrentHp = _MaxHp;
     
         _rigidbody = GetComponent<Rigidbody>();
-        // _animator = GameObject.FindGameObjectWithTag("Player Interface").GetComponent<Animator>();
+        _animator = _Model.GetComponent<Animator>();
+
+        //Đăng ký Event
+        Observer.AddListener(EvenID.HealPlayer, OnHeal);
+
+        _Hand = GetComponentInChildren<HolderController>().gameObject;
     }
 
-    
+   
+
     void Update()
     {
         
@@ -64,6 +72,8 @@ public class PlayerController : MonoBehaviour
         moveInput =  new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         if(moveInput.x!=0 && moveInput.z!=0) moveInput.Normalize();     //Chuẩn hóa vector 
         _rigidbody.velocity = _movementspeed * moveInput.ToIso();
+
+        _animator.SetFloat("Speed", _rigidbody.velocity.sqrMagnitude);
 
         //_rigidbody.MovePosition(transform.position + moveInput.ToIso() * moveInput.ToIso().normalized.magnitude *_movementspeed * Time.deltaTime);
 
@@ -106,43 +116,47 @@ public class PlayerController : MonoBehaviour
         direction.y = 0; //bỏ qua độ cao
 
         //xoay player
+        if(_isDashing){
+            transform.forward = moveInput.ToIso();
+            return;
+        }
         transform.forward = direction;
 
     }
 
     private void Dash()
     {
+
         if ( _DashTimeCD <=0 && _isDashing){
+
             _movementspeed -= _DashSpeed;
-            // _animator.SetBool("IsDash", false);
+            _animator.SetBool("IsDash", false);
+
             _isDashing = false;
-            Invoke(nameof(CancelInvoke), 0.3f);
+            _Hand.SetActive(true);
+
         } else {
             _DashTimeCD -=Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.Space)&& !_DashCD.IsCoolingDown && _DashTimeCD <= 0)
-        {
+        {   
+
             _movementspeed += _DashSpeed;
+
+            _animator.SetFloat("DashTime", 1/_DashTime);
+            _animator.SetBool("IsDash", true);
+
             _DashCD.StartCooldown();
             _DashTimeCD = _DashTime;
             _isDashing = true;
-            // _animator.SetBool("IsDash", true);
 
-            // //hiệu ứng
-            // InvokeRepeating(nameof(DashEffect), 0f, _DashTime/8);
+            
+
+            _Hand.SetActive(false);
+
         }
     }
-
-    // private void DashEffect(){
-    //     GameObject ghostEffect = ObjectPoolManager.Singleton.GetObject("Ghost Effect");
-    //     if(ghostEffect != null)
-    //     {
-    //         ghostEffect.SetActive(true);
-    //         ghostEffect.transform.position = gameObject.transform.position;
-    //         ghostEffect.GetComponent<SpriteRenderer>().sprite = GameObject.FindGameObjectWithTag("Player Interface").GetComponent<SpriteRenderer>().sprite;
-    //     }
-    // }
 
     public void TakeDamage(int Dmg){
         if(_amor > 0){
@@ -153,13 +167,26 @@ public class PlayerController : MonoBehaviour
             }
         } else _CurrentHp -= Dmg;
 
-        Observer.PostEvent(EvenID.DisplayDamagePopup, Dmg, transform.position);
+        Observer.PostEvent(EvenID.DisplayTextPopup, Dmg, transform.position, Color.red);
 
-        Observer.PostEvent(EvenID.DisplayPlayerHP, _CurrentHp, _MaxHp, Dmg);
+        Observer.PostEvent(EvenID.DisplayPlayerHP, _CurrentHp, _MaxHp);
 
         if(_CurrentHp <=0){
             _CurrentHp = 0;
+            Observer.PostEvent(EvenID.DisplayGameOver);
         }
+    }
+
+    
+
+    private void OnHeal(object[] obj)
+    {
+        _CurrentHp += (int)obj[0];
+
+
+        if(_CurrentHp > _MaxHp) _CurrentHp = _MaxHp;
+        Observer.PostEvent(EvenID.DisplayPlayerHP, _CurrentHp, _MaxHp);
+        Observer.PostEvent(EvenID.DisplayTextPopup, "+" +(int)obj[0], transform.position, Color.green);
     }
 
     

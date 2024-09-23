@@ -30,7 +30,14 @@ public class GunController : MonoBehaviour, IEnemyAttack
     private Animator _handleAnimator;
     private Animator _gunAnimator;
 
-    
+    private bool _hasNoCostBuff = false;
+    private int _NoCostChance = 0;
+
+    void Awake()
+    {
+        //dang ky su kien
+        Observer.AddListener(EvenID.BuffNoCost, ApplyNoCost);
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -79,8 +86,11 @@ public class GunController : MonoBehaviour, IEnemyAttack
         BulletTmp.GetComponentInChildren<TrailRenderer>().Clear();    //đặt lại effect
         BulletTmp.GetComponentInChildren<MeshFilter>().mesh = _BulletMesh;   //Đổi loại đạn
 
-        BulletTmp.GetComponent<BulletHit>().Dmg = (int)(_Dmg * Multiplier);
-        BulletTmp.GetComponent<BulletHit>().PlayerBullet = _IsPlayer;
+        BulletHit bulletHit = BulletTmp.GetComponent<BulletHit>();
+
+        bulletHit.Dmg = (int)(_Dmg * Multiplier);
+        bulletHit.PlayerBullet = _IsPlayer;
+        bulletHit.force = _BulletForce;
 
         Rigidbody rb = BulletTmp.GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero; 
@@ -96,13 +106,13 @@ public class GunController : MonoBehaviour, IEnemyAttack
         else
             _handleAnimator.SetFloat("SpeedCoef", 4);
 
-
-        if(_IsPlayer){
-            _RemainAmmo--;
-            Observer.PostEvent(EvenID.DisplayPlayerAmmo, _RemainAmmo);
-        }
-            
         _FireRate.StartCooldown();
+
+        if(!_IsPlayer) return;
+        if(_hasNoCostBuff && Random.Range(0, 100) < _NoCostChance) return;
+        _RemainAmmo--;
+        Observer.PostEvent(EvenID.DisplayPlayerAmmo, _RemainAmmo);
+        
     }
 
     private void Reload(){
@@ -120,7 +130,10 @@ public class GunController : MonoBehaviour, IEnemyAttack
         transform.parent.gameObject.SetActive(true);
     }
 
-    
+    private void ApplyNoCost(object[] data){
+        _hasNoCostBuff = true;
+        _NoCostChance = (int)data[0];
+    }
 
     public void Attack(float multiplier)
     {
@@ -142,7 +155,7 @@ public class GunController : MonoBehaviour, IEnemyAttack
         return Icon;
     }
 
-     public GameObject GetModel(){
+    public GameObject GetModel(){
         return Model;
     }
 
@@ -161,5 +174,4 @@ public class GunController : MonoBehaviour, IEnemyAttack
         return info;
     } 
 
-   
 }
