@@ -4900,6 +4900,9 @@ MonoBehaviour:
   _Speed: 12
   _delay: 0.5
   _objectType: 2
+  Amount: 10
+  Randomize: 0
+  RandomRange: 0
 --- !u!54 &9187024780104938126
 Rigidbody:
   m_ObjectHideFlags: 0

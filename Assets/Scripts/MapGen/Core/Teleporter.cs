@@ -14,7 +14,8 @@ public class Teleporter : MonoBehaviour, IInteractable
     private CinemachineVirtualCamera virtualCamera;
     public string _Message;
   
-    public string InteractMessage => _Message; 
+    public string InteractMessage => _Message;
+    private PlayerController playerController;
 
     
 
@@ -22,6 +23,7 @@ public class Teleporter : MonoBehaviour, IInteractable
     void Start()
     {
         virtualCamera =  GameObject.FindGameObjectWithTag("Camera Pivot").GetComponent<CinemachineVirtualCamera>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -30,26 +32,37 @@ public class Teleporter : MonoBehaviour, IInteractable
 
     }
 
-    public void TakeAction ()
+    public void TakeAction(InteractionController Interacter)
     {
-        GameObject Player = GameObject.FindGameObjectWithTag("Player");
+        PlayerController Player = Interacter.gameObject.GetComponent<PlayerController>();
 
-        //chuẩn bị ải sắp tới
-        Observer.PostEvent(EvenID.BoardPrepare, teleportDiraction);
-        
+        Vector3 nextPosition;
+
         //dịch chuyển người chơi đến ải
         if(teleportDiraction == TeleportDiraction.Left){
-            Player.transform.position += new Vector3(0, 0, 50.5f);
-            return;
+            nextPosition = new Vector3(0, 0, 50.5f);
+        } 
+
+        else if(teleportDiraction == TeleportDiraction.Right){
+            nextPosition = new Vector3(50.5f, 0, 0);
         }
 
-        if(teleportDiraction == TeleportDiraction.Right){
-            Player.transform.position += new Vector3(50.5f, 0, 0);
-            return;
+        else{
+            nextPosition = new Vector3(47.5f, 0, 47.5f);
         }
 
-        Player.transform.position += new Vector3(47.5f, 0, 47.5f);
+        Player.CurrentState = PlayerController.PlayerState.TeleportOut;
+        TelePlayer(Player.gameObject, nextPosition);
         
+    }
+
+    private async void TelePlayer(GameObject player, Vector3 target){
+        await Task.Delay(800);
+        
+        //chuẩn bị ải sắp tới
+        Observer.PostEvent(EvenID.BoardPrepare, teleportDiraction);
+        player.transform.position += target;
+
     }
 
 

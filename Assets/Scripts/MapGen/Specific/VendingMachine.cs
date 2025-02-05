@@ -21,7 +21,7 @@ public class VendingMachine : MonoBehaviour, IInteractable
        
 
 
-    public void TakeAction()
+    public void TakeAction(InteractionController Interacter)
     {
         if(!CoinAndAmmoManager.CanSpendCoins(_Price)){
             _Text.text = "Not enough coins T_T";

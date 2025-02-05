@@ -5,6 +5,7 @@ using ObserverPattern;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MenuUI : MonoBehaviour
 {
@@ -53,23 +54,26 @@ public class MenuUI : MonoBehaviour
     private List<GameObject> _BuffPanel = new List<GameObject>();
 
 
+    //BossIntro
+    [SerializeField] private GameObject _BossIntroUI;
+    [SerializeField] private TextMeshProUGUI _BossName;
+    [SerializeField] private Image _BossIcon;
+
     //GameOver
     [SerializeField] private GameObject _GameOverUI;
     [SerializeField] private TextMeshProUGUI _timePlay;
-
-
-
-
+    public static MenuUI Instance;
 
     // Start is called before the first frame update
     void Start()
-    {
-        //Đăng ký event
-        Observer.AddListener(EvenID.DisplayGunStoreUI, OnDisplayGunStoreUI);
-        Observer.AddListener(EvenID.DisplayBuffSelectUI, OnDisplayBuffSelectUI);
-        Observer.AddListener(EvenID.DisplayBuffUpgradeUI, OnDisplayBuffUpgradeUI);
-        Observer.AddListener(EvenID.ReturnBuffSelected, DisplayUpgradeInfo);
-        Observer.AddListener(EvenID.DisplayGameOver, OnDisplayGameOver);
+    {   
+        if (Instance == null){
+            Instance = this;
+
+        } else if (Instance != this){
+            Destroy(gameObject);
+        }
+
     }
 
     
@@ -86,7 +90,7 @@ public class MenuUI : MonoBehaviour
 
 
     //=======Cưa hàng súng====================================
-    private void OnDisplayGunStoreUI(object[] data){
+    public void OnDisplayGunStoreUI(object[] data){
        
         _BlurBackground.SetActive(true);
         _GunStoreUI.SetActive(true);
@@ -119,7 +123,6 @@ public class MenuUI : MonoBehaviour
         CoinAndAmmoManager.SpendCoins(_ItemsCost[_OnSelect]);
         Observer.PostEvent(EvenID.DropGun, _OnSelect);
        
-
         OnClose();
     }
 
@@ -128,7 +131,7 @@ public class MenuUI : MonoBehaviour
 
     //===========Chọn buff=====================================
 
-    private void OnDisplayBuffSelectUI(object[] obj)
+    public void OnDisplayBuffSelectUI(object[] obj)
     {
         _BlurBackground.SetActive(true);
         _BuffSelectUI.SetActive(true);
@@ -159,7 +162,7 @@ public class MenuUI : MonoBehaviour
     //===========End chọn buff=================================
 
     //===========Cường hóa buff===============================
-    private void OnDisplayBuffUpgradeUI(object[] obj){
+    public void OnDisplayBuffUpgradeUI(int cost){
         
         //Hiển thị UI
         _BlurBackground.SetActive(true);
@@ -168,11 +171,11 @@ public class MenuUI : MonoBehaviour
 
         //lấy dữ liệu
         _PlayerBuffEffect = GameManager.Instance.GetPlayerBuffList();
-        _Cost = (int)obj[0];
+        _Cost = cost;
 
         //hien thi thong tin
         _coin.text = CoinAndAmmoManager.GetPlayerCoin().ToString();
-        _BuffUpgradeCost.text = ((int)obj[0]).ToString();
+        _BuffUpgradeCost.text = (cost).ToString();
         
         if(!CoinAndAmmoManager.CanSpendCoins(_Cost)){
             _BuffUpgradeCost.color = Color.red;
@@ -195,12 +198,12 @@ public class MenuUI : MonoBehaviour
         }
         
         if(_OnSelect >= _PlayerBuffEffect.Count) return;
-        DisplayUpgradeInfo(new object[] { _OnSelect });
+        DisplayUpgradeInfo(_OnSelect );
     }
 
     //Hiển thị thông tin cường hóa
-    private void DisplayUpgradeInfo(object[] obj){
-        _OnSelect = (int)obj[0];
+    public void DisplayUpgradeInfo(int index){
+        _OnSelect = index;
 
         BuffEffect buff = _PlayerBuffEffect[_OnSelect];
 
@@ -225,14 +228,26 @@ public class MenuUI : MonoBehaviour
         
         //làm mới UI
         OnClose();
-        OnDisplayBuffUpgradeUI(new object[]{_Cost});
+        OnDisplayBuffUpgradeUI(_Cost);
 
     }
 
     //===========End cường hóa buff===========================
 
+    //===========BossIntro=====================================
+    public void OnDisplayBossIntro(string name, Sprite icon){
+        _BlurBackground.SetActive(true);
+        _BossIntroUI.SetActive(true);
+        Time.timeScale = 0;
+
+        _BossName.text = name;
+        _BossIcon.sprite = icon;
+        Invoke(nameof(OnClose), 0.1f);
+    }
+
+
     //===========GameOver=====================================
-    public void OnDisplayGameOver(object[] obj){
+    public void OnDisplayGameOver(){
         _BlurBackground.SetActive(true);
         _GameOverUI.SetActive(true);
         _GameOverUI.GetComponent<Animator>().Play("GameOverUI",-1, 0f);
@@ -249,12 +264,23 @@ public class MenuUI : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    public void ReTryBtn(){
+        //Reload current scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void Return(){
+        
+        SceneManager.LoadScene(0);
+    }
+
 
     public void OnClose(){
         _BlurBackground.SetActive(false);
         _GunStoreUI.SetActive(false);
         _BuffSelectUI.SetActive(false);
         _BuffUpgradeUI.SetActive(false);
+        _BossIntroUI.SetActive(false);
 
         foreach (var item in _BuffPanel)
         {
@@ -264,13 +290,6 @@ public class MenuUI : MonoBehaviour
         _BuffPanel.Clear();
 
         Time.timeScale = 1;
-    }
-
-    void OnDestroy()
-    {
-        Observer.RemoveListener(EvenID.DisplayGunStoreUI, OnDisplayGunStoreUI);
-        Observer.RemoveListener(EvenID.DisplayBuffSelectUI, OnDisplayBuffSelectUI);
-        Observer.RemoveListener(EvenID.DisplayBuffUpgradeUI, OnDisplayBuffUpgradeUI);
     }
 
 }

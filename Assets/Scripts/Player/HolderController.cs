@@ -15,12 +15,10 @@ public class HolderController : MonoBehaviour
     void Awake()
     {
         //Khởi tạo
-        GameObject[] _GunListTmp = Resources.LoadAll<GameObject>("Gun");
-        foreach(GameObject gun in _GunListTmp){
+        foreach(GameObject gun in Resources.LoadAll<GameObject>("Gun")){
             GameObject gunTmp = Instantiate(gun, transform);
             _GunList.Add(gunTmp);
             gunTmp.SetActive(false);
-
         }
     }
     void Start()

@@ -28,7 +28,7 @@ public class ChestController : MonoBehaviour, IInteractable
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
     }
 
-    public void TakeAction(){
+    public void TakeAction(InteractionController Interacter){
         if(_IsOpen) return;
         _animator.SetBool("Open", true);
         SpawnItem("Coin", _CoinAmount);

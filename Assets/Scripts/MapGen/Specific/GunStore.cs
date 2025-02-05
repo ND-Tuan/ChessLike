@@ -17,10 +17,10 @@ public class GunStore : MonoBehaviour, IInteractable
         Observer.AddListener(EvenID.DropGun, OnDropGun);
     }
 
-    public void TakeAction()
+    public void TakeAction(InteractionController Interacter)
     {
         // Lấy danh sách súng từ HolderController
-        _GunList = FindObjectOfType<HolderController>().GetGunList();
+        _GunList = Interacter.GetComponentInChildren<HolderController>().GetGunList();
     
         // Kiểm tra xem có cần chọn ngẫu nhiên không
         if (_IsRandom)
@@ -36,8 +36,8 @@ public class GunStore : MonoBehaviour, IInteractable
             _IsRandom = false;
         }
     
-        // Gửi Event hiển thị giao diện
-        Observer.PostEvent(EvenID.DisplayGunStoreUI, _gunInfo);
+        //hiển thị giao diện
+       MenuUI.Instance.OnDisplayGunStoreUI(_gunInfo);
     }
     
     void OnEnable()

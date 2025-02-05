@@ -4,19 +4,31 @@ using UnityEngine;
 
 public class SelfDeactive : MonoBehaviour
 {
+   [SerializeField] private bool NeedDeactiveWhenBecomeInvisible = true;
+   [SerializeField] private float _timeToDeactive = 1f;
+
    public void DeActive(){
       gameObject.SetActive(false);
-      
+      if(TryGetComponent<Collider>(out var collider)){
+         collider.enabled = false;
+      }
+      Time.timeScale = 1;
    }
 
    public void IsTrigger(){
-     gameObject.GetComponent<Collider>().isTrigger = true;
+      if(TryGetComponent<Collider>(out var collider)){
+         collider.enabled = false;
+      }
      
    }
 
 
    public void OnBecameInvisible()
    {
-      DeActive();
+      if(NeedDeactiveWhenBecomeInvisible)
+         DeActive();
+
+
+         
    }
 }

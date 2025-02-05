@@ -5,6 +5,6 @@ using UnityEngine;
 public interface IInteractable
 {
     string InteractMessage {get;}
-    void TakeAction();
+    void TakeAction(InteractionController Interacter);
 
 }

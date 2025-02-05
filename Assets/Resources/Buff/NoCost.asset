@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: NoCost
   m_EditorClassIdentifier: 
   BuffName: No Cost
-  BuffID: 4
+  BuffID: 2
   description: Shot has #% chance to not consume ammo
+  BuffComponent: {fileID: 0}
+  ApplyTo: 2
   _BuffValue: 1400000022000000

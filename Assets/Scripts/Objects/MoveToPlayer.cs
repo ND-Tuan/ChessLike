@@ -9,9 +9,13 @@ public class MoveToPlayer : MonoBehaviour
 {
     [SerializeField] private float _Speed;
     [SerializeField] private float _delay;
-    [SerializeField] private enum ObjectType {Coin, Ammo, Soul};
+    [SerializeField] private enum ObjectType {Coin, Ammo, Hp};
     [SerializeField] private ObjectType _objectType;
-    private int healthAmount = 0;
+    public int Amount = 0;
+
+    [SerializeField] private bool Randomize;
+    [SerializeField] private int RandomRange;
+
     private bool _StartMove = false;
     private Rigidbody rb;
 
@@ -38,7 +42,6 @@ public class MoveToPlayer : MonoBehaviour
         _StartMove = false;
 
         Invoke("StartMove", _delay);
-        healthAmount = GameManager.Instance._HealAmount;
     }
 
     private void StartMove()
@@ -55,20 +58,21 @@ public class MoveToPlayer : MonoBehaviour
         if(!_StartMove) return;
         if(other.gameObject.CompareTag("Player")){
 
+            int amount = Randomize? Random.Range(Amount-RandomRange, Amount+RandomRange) : Amount;
+
             if(_objectType == ObjectType.Coin){
-                int coin = Random.Range(4, 8);
-                CoinAndAmmoManager.AddCoins(coin);
+                CoinAndAmmoManager.AddCoins(amount);
                 Observer.PostEvent(EvenID.DisplayCoin);
 
             }
 
             if(_objectType == ObjectType.Ammo){
-                CoinAndAmmoManager.AddAmmo(Random.Range(2, 6));
+                CoinAndAmmoManager.AddAmmo(amount);
                 Observer.PostEvent(EvenID.DisplayPlayerAmmo, null);
             }
 
-            if(_objectType == ObjectType.Soul){
-                Observer.PostEvent(EvenID.HealPlayer, healthAmount);
+            if(_objectType == ObjectType.Hp){
+                Observer.PostEvent(EvenID.HealPlayer, amount);
             }
 
             GetComponent<TrailRenderer>().Clear();

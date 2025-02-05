@@ -35,7 +35,7 @@ public class BuffInfo{
         _Crystal.transform.rotation = Quaternion.Euler(0, _Crystal.transform.eulerAngles.y+ Time.deltaTime * 20, 0);
     }
 
-    public void TakeAction()
+    public void TakeAction(InteractionController Interacter)
     {
         
         // Kiểm tra xem có cần chọn ngẫu nhiên không
@@ -58,8 +58,8 @@ public class BuffInfo{
         _IsRandom = false;
         
         _Message = null ;
-        // Gửi Event hiển thị giao diện
-        Observer.PostEvent(EvenID.DisplayBuffSelectUI, _buffInfo);
+        //hiển thị giao diện
+        MenuUI.Instance.OnDisplayBuffSelectUI(_buffInfo);
        
     }
     
@@ -91,8 +91,6 @@ public class BuffInfo{
     {
         int _OnSelect = (int)obj[0];
         GameManager.Instance.AddBuff(GameManager.Instance.GetBuffList()[_BuffIndex[_OnSelect]]);
-
-
         gameObject.SetActive(false);
     }
 

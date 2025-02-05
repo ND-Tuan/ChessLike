@@ -1,10 +1,7 @@
-
 using ObserverPattern;
 using UnityEngine;
 
-
-
-public class GunController : MonoBehaviour, IEnemyAttack
+public class GunController : MonoBehaviour
 {
     [Header("-----Gun Info------")]
     [SerializeField] private GameObject Model;
@@ -14,7 +11,6 @@ public class GunController : MonoBehaviour, IEnemyAttack
     [SerializeField] private int AmmoCapacity;
     private int _RemainAmmo;
     [SerializeField] private Cooldown _FireRate;
-
     private float _ReloadTime = 1f;
     
     [SerializeField] private float  _BulletForce;
@@ -30,14 +26,6 @@ public class GunController : MonoBehaviour, IEnemyAttack
     private Animator _handleAnimator;
     private Animator _gunAnimator;
 
-    private bool _hasNoCostBuff = false;
-    private int _NoCostChance = 0;
-
-    void Awake()
-    {
-        //dang ky su kien
-        Observer.AddListener(EvenID.BuffNoCost, ApplyNoCost);
-    }
     // Start is called before the first frame update
     void Start()
     {
@@ -62,8 +50,7 @@ public class GunController : MonoBehaviour, IEnemyAttack
         
             if(_RemainAmmo == 0 || Input.GetKeyDown(KeyCode.R))
                 Reload();
-        }
-        
+        }  
     }
 
     void OnEnable()
@@ -73,7 +60,6 @@ public class GunController : MonoBehaviour, IEnemyAttack
     }
 
     private void Fire(){
-
         if(_IsPlayer && _RemainAmmo == 0) return;
 
         GameObject BulletTmp = ObjectPoolManager.Instance.GetObject("Bullet");
@@ -85,6 +71,7 @@ public class GunController : MonoBehaviour, IEnemyAttack
 
         BulletTmp.GetComponentInChildren<TrailRenderer>().Clear();    //đặt lại effect
         BulletTmp.GetComponentInChildren<MeshFilter>().mesh = _BulletMesh;   //Đổi loại đạn
+        BulletTmp.GetComponent<Collider>().enabled = true;
 
         BulletHit bulletHit = BulletTmp.GetComponent<BulletHit>();
 
@@ -95,7 +82,6 @@ public class GunController : MonoBehaviour, IEnemyAttack
         Rigidbody rb = BulletTmp.GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero; 
         rb.AddForce(_FirePos.transform.right * _BulletForce, ForceMode.Impulse);  //Gắn vector lực
-            
 
         //chạy Animation giật
         _handleAnimator.Play("GunRecoil", -1, 0f);
@@ -109,10 +95,8 @@ public class GunController : MonoBehaviour, IEnemyAttack
         _FireRate.StartCooldown();
 
         if(!_IsPlayer) return;
-        if(_hasNoCostBuff && Random.Range(0, 100) < _NoCostChance) return;
         _RemainAmmo--;
         Observer.PostEvent(EvenID.DisplayPlayerAmmo, _RemainAmmo);
-        
     }
 
     private void Reload(){
@@ -128,11 +112,6 @@ public class GunController : MonoBehaviour, IEnemyAttack
 
     private void ReloadFinish(){
         transform.parent.gameObject.SetActive(true);
-    }
-
-    private void ApplyNoCost(object[] data){
-        _hasNoCostBuff = true;
-        _NoCostChance = (int)data[0];
     }
 
     public void Attack(float multiplier)
@@ -173,5 +152,7 @@ public class GunController : MonoBehaviour, IEnemyAttack
 
         return info;
     } 
+
+    public void RemoveAttack(){}
 
 }

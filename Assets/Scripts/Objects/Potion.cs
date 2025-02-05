@@ -18,7 +18,7 @@ public class Potion : MonoBehaviour, IInteractable
         }
     }
 
-    public void TakeAction()
+    public void TakeAction(InteractionController Interacter)
     {
         Observer.PostEvent(EvenID.HealPlayer, _HealAmount);
         gameObject.SetActive(false);

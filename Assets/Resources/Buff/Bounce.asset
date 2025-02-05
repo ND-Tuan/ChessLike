@@ -13,7 +13,14 @@ MonoBehaviour:
   m_Name: Bounce
   m_EditorClassIdentifier: 
   BuffName: Bounce
-  BuffID: 1
+  BuffID: 0
   description: Bullets have a certain chance of bouncing # times when hitting an
     object
+  BuffComponent:
+    rid: -2
   _BuffValue: 0200000003000000
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

@@ -4,17 +4,29 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using ObserverPattern;
 using System;
+using System.Threading.Tasks;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
+    public enum PlayerState{
+        TeleportIn,
+        TeleportOut,
+        Alive,
+        Death
+    }
     //Player Status
     [Header("------Player Status------")]
-
+    public PlayerState CurrentState;
+    private PlayerState PreviousState;
     [SerializeField] private int _MaxHp;
     private int _CurrentHp;
     [SerializeField] private int _amor;
     [SerializeField] private float _Accurate;
-    [SerializeField] private float _movementspeed = 1;
+    [SerializeField] private float _NormalSpeed;
+    private float _movementspeed = 1;
+    public bool Freezing { get; set; }
+    public bool Burning { get; set; }
+
 
     //Dash
     [Header("------Dash------")]
@@ -36,12 +48,16 @@ public class PlayerController : MonoBehaviour
 
     [Header("-------------------")]
     [SerializeField] private GameObject TargetSign;
+    [SerializeField] private ParticleSystem TeleportIn;
+    [SerializeField] private ParticleSystem TeleportOut;
     private bool TargetMode;
     private GameObject Target;
 
     // Start is called before the first frame update
     void Start()
-    {
+    {   
+        CurrentState = PlayerState.TeleportIn;
+        StateMachine();
         _CurrentHp = _MaxHp;
     
         _rigidbody = GetComponent<Rigidbody>();
@@ -57,7 +73,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        
+        if(CurrentState != PreviousState){
+            StateMachine();
+            PreviousState = CurrentState;
+        }
+
+        if(CurrentState != PlayerState.Alive) return;
         Dash();
         Rotation();
     
@@ -68,7 +89,46 @@ public class PlayerController : MonoBehaviour
         Movement();
     }
 
+    private async void StateMachine(){
+        switch(CurrentState){
+            case PlayerState.Alive:
+                ToggleVisual(true);
+                break;
+
+            case PlayerState.TeleportIn:
+                //Tắt visual đề phòng đang bật
+                ToggleVisual(false);
+                
+                //chạy particle
+                TeleportIn.transform.position = transform.position;
+                TeleportIn.Play();
+
+                //Chuyển trạng thái
+                await Task.Delay(400);
+                CurrentState = PlayerState.Alive;
+                break;
+
+            case PlayerState.TeleportOut:
+                ToggleVisual(false);
+                TeleportOut.transform.position = transform.position;
+                TeleportOut.Play();
+
+                await Task.Delay(1100);
+                CurrentState = PlayerState.TeleportIn;
+                break;
+            
+            case PlayerState.Death:
+                MenuUI.Instance.OnDisplayGameOver();
+                break;
+        }
+    }
+
+
     private void Movement(){
+        if(CurrentState != PlayerState.Alive) return;
+
+        _movementspeed = _isDashing? _DashSpeed : _NormalSpeed;
+
         moveInput =  new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         if(moveInput.x!=0 && moveInput.z!=0) moveInput.Normalize();     //Chuẩn hóa vector 
         _rigidbody.velocity = _movementspeed * moveInput.ToIso();
@@ -95,8 +155,11 @@ public class PlayerController : MonoBehaviour
 
         if( Input.GetMouseButtonDown(1)){
             Target = hit.transform.gameObject;
-            TargetSign.SetActive(true);
+           
             TargetMode = Target.CompareTag("Enemy"); 
+            TargetSign.SetActive(TargetMode);
+            
+            Debug.Log(hit.transform.gameObject.name);
         } 
 
         if(TargetMode){
@@ -129,7 +192,6 @@ public class PlayerController : MonoBehaviour
 
         if ( _DashTimeCD <=0 && _isDashing){
 
-            _movementspeed -= _DashSpeed;
             _animator.SetBool("IsDash", false);
 
             _isDashing = false;
@@ -142,7 +204,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)&& !_DashCD.IsCoolingDown && _DashTimeCD <= 0)
         {   
 
-            _movementspeed += _DashSpeed;
 
             _animator.SetFloat("DashTime", 1/_DashTime);
             _animator.SetBool("IsDash", true);
@@ -158,7 +219,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int Dmg){
+    public void TakeDamage(int Dmg, Vector3 hitPoint = default){
+        if(_isDashing) return;
         if(_amor > 0){
             _amor -= Dmg;
             if(_amor < 0){
@@ -173,7 +235,7 @@ public class PlayerController : MonoBehaviour
 
         if(_CurrentHp <=0){
             _CurrentHp = 0;
-            Observer.PostEvent(EvenID.DisplayGameOver);
+            CurrentState = PlayerState.Death;
         }
     }
 
@@ -189,7 +251,19 @@ public class PlayerController : MonoBehaviour
         Observer.PostEvent(EvenID.DisplayTextPopup, "+" +(int)obj[0], transform.position, Color.green);
     }
 
-    
+    private void ToggleVisual(bool value){
+        foreach (var item in GetComponentsInChildren<MeshRenderer>()){
+            item.enabled = value;
+        }
+    }
+
+    public void BuffsTrigger()
+    {
+        foreach (var buff in GetComponents<BaseEffect>())
+        {
+            buff.BuffTrigger();
+        }
+    }
 }
 
 public static class Helpers 

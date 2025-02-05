@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2017161016446277695}
   - component: {fileID: 2215565492441728455}
   - component: {fileID: 4730725576009190387}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Black King
   m_TagString: Untagged
   m_Icon: {fileID: 0}

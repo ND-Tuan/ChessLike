@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public int _NumBoardBeforeBoss = 3;
     public int _CurrentStage = 1;
     public int _CurrentProgress = 1;
+    public Vector3 CurrentBoardPosition = Vector3.zero;
     public List<EnemyWaveSetting> _enemyWaveSetting;
     [SerializeField] private GameObject Chest;
     public bool BoardDone;
@@ -28,18 +29,7 @@ public class GameManager : MonoBehaviour
     [Header("---Buff Manager----------------------")]
     [SerializeField] private List<BuffEffect> _BuffList;
     [SerializeField] private List<BuffEffect> _PlayerBuffList = new();
-    public bool _HasSoulEatingBuff { get; private set; }
-    public int _HealAmount { get; private set; }
-    
-    [SerializeField] private int BurnDamage ;
-    [SerializeField] private float BurnDuration ;
-    [SerializeField] private float BurnCooldown ;
-
-    [SerializeField] private bool _HasNoCostBuff;
-
-    [SerializeField] private int PoisonDamage ;
-
-
+    public StatusEffectData _StatusEffectData;
 
     //Singleton
     public static GameManager Instance { get; private set; }
@@ -51,7 +41,6 @@ public class GameManager : MonoBehaviour
         //triển khai Singleton
         if (Instance == null){
             Instance = this;
-            DontDestroyOnLoad(gameObject);
 
         } else if (Instance != this){
             Destroy(gameObject);
@@ -62,13 +51,13 @@ public class GameManager : MonoBehaviour
         CoinAndAmmoManager.SetMaxAmmo(_MaxAmmo);
         CoinAndAmmoManager.AddAmmo(_MaxAmmo);
 
+        //Load Buff
         _BuffList = Resources.LoadAll<BuffEffect>("Buff").ToList();
 
 
         //Đăng ký Event
         Observer.AddListener(EvenID.CombatDone, OnCombatDone);
         Observer.AddListener(EvenID.BoardDone, CalculateProgress);
-        Observer.AddListener(EvenID.BuffSoulEating, SetSoulEatingBuff);
     }
 
     void Update()
@@ -79,7 +68,7 @@ public class GameManager : MonoBehaviour
     //Gameplay machenic=====================================
     public void OnCombatDone(object[] data){
         Chest.SetActive(true);
-        Chest.transform.position = (Vector3)data[0];
+        Chest.transform.position = CurrentBoardPosition;
 
         Observer.PostEvent(EvenID.BoardDone);
         BoardDone = false;
@@ -93,14 +82,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-
-
     //Buff machenic=====================================
     public List<BuffEffect> GetBuffList(){
         return _BuffList;
     }
-
 
     public List<BuffEffect> GetPlayerBuffList(){
         return _PlayerBuffList;
@@ -116,12 +101,4 @@ public class GameManager : MonoBehaviour
         _PlayerBuffList[index].UpgradeBuff();
     }
 
-    private void SetSoulEatingBuff(object[] obj){
-        _HasSoulEatingBuff = true;
-        _HealAmount = (int)obj[0];
-    }
-
-    public object[] GetBurnInfo(){
-        return new object[]{BurnDamage, BurnDuration, BurnCooldown};
-    }
 }

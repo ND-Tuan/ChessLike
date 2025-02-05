@@ -5,13 +5,12 @@ using UnityEngine;
 
 public class BuffUpgrade : MonoBehaviour, IInteractable
 {
-    private List<BuffEffect> _buffEffects;
     [SerializeField]private int _costToUpgrade;
 
     public string InteractMessage => "Upgrade Buff";
 
-    public void TakeAction()
+    public void TakeAction(InteractionController Interacter)
     {
-        Observer.PostEvent(EvenID.DisplayBuffUpgradeUI,_costToUpgrade);
+        MenuUI.Instance.OnDisplayBuffUpgradeUI(_costToUpgrade);
     }
 }

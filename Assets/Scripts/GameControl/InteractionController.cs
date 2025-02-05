@@ -79,7 +79,7 @@ public class InteractionController : MonoBehaviour
         _interactMessage.text = _interactable.InteractMessage;
 
         if(Input.GetKeyDown(KeyCode.F)){
-            _interactable.TakeAction();
+            _interactable.TakeAction(this);
             _isInteracting = true;
         }
 

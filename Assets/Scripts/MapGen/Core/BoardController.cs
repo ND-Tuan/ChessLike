@@ -16,38 +16,7 @@ public class EnemyWaveSetting {
 
 public class BoardController : MonoBehaviour
 {
-    [SerializeField] private GameObject _Options;
-    [SerializeField] private GameObject[] _OptionsDisplay = new GameObject[2];
-    [SerializeField] private Teleporter[] teleporter;
-
-    void Awake()
-    {
-        
-    }
-
-    //hiển thị các lựa chọn ải tiếp theo
-    public void DisplayOptions(SpecificBoard[] OptionInfo){
-        _Options.SetActive(true);
-        teleporter = GetComponentsInChildren<Teleporter>();
-
-        //đổi icon cho các lựa chọn khu vực tiếp theo
-        for(int i = 0; i<2; i++){
-            _OptionsDisplay[i].GetComponent<MeshRenderer>().material = OptionInfo[i].BoardIcon;
-            teleporter[i]._Message = OptionInfo[i].Message;
-        }
-        teleporter[2]._Message = "Combat";
-    
-        _Options.GetComponent<Animator>().SetBool("Play", true);
-        
-    }
-
-    //Làm mới ải nhằm tái sử dụng
-    public void ResetBoard(){
-        _Options.transform.position = new Vector3(0, -1.28f, 0);
-        _Options.SetActive(false);
-    }
-
-
+   
     public void PrepareCombat(EnemyWaveSetting waveSetting){
         StartCoroutine(StartWave(waveSetting));
 
@@ -63,7 +32,7 @@ public class BoardController : MonoBehaviour
             //yield return new WaitForSeconds(5);
         }
 
-        Observer.PostEvent(EvenID.CombatDone, transform.position);
+        Observer.PostEvent(EvenID.CombatDone);
     }
 
     private void SpawnEnermy(int quantity, int difficultLevel){
@@ -94,7 +63,7 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private Vector3 TakeRandomPosition(){
+    public Vector3 TakeRandomPosition(){
 
         // lấy vị trí ngẫu nhiên
         Vector3 position = transform.position + new Vector3(Random.Range(-10, 10), 15, Random.Range(-10, 10));

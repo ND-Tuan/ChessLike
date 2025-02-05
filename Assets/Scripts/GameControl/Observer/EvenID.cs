@@ -2,19 +2,18 @@
 
 public enum EvenID 
 {
-    ////Buff
-    BuffPierce,
-    BuffBounce,
-    BuffSoulEating,
-    BuffOnFire,
-    BuffNoCost,
+    ////Buffff
+
+    ApplyToBullet,
+    ApplyToTarget,
+    ApplyToPlayer,
+
+    UpgradeBuff,
 
 
     //Status UI
     DisplayPlayerHP,
-    DisplayAmor,
     DisplayTextPopup,
-    DisplayEnemyHp,
     DisplayCoin,
     DisplayCurrentGunIcon,
     DisplayPlayerAmmo,

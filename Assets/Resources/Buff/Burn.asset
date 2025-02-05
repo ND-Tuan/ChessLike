@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Burn
   m_EditorClassIdentifier: 
   BuffName: Ignite
-  BuffID: 3
+  BuffID: 4
   description: Bullets have  #% chance to cause fire to enemies
-  _BuffValue: 280000003c000000
+  BuffComponent: {fileID: 0}
+  ApplyTo: 1
+  _BuffValue: 1e00000032000000

@@ -27,6 +27,6 @@ public class BuffPanelDisplay : MonoBehaviour
 
     public void OnClick()
     {
-       Observer.PostEvent(EvenID.ReturnBuffSelected, id);
+        MenuUI.Instance.DisplayUpgradeInfo(id);
     }
 }

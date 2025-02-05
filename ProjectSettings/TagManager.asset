@@ -12,6 +12,21 @@ TagManager:
   - Bullet
   - Enemy
   - PopupText
+  - EnemyCorpse
+  - Coin
+  - DropObject
+  - Ammo
+  - Potion1
+  - Potion2
+  - Potion3
+  - Wall
+  - EnemyHPBar
+  - BuffPanel
+  - Soul
+  - Fire
+  - FreezeEffect
+  - BishopBullet
+  - PlayerBullet
   layers:
   - Default
   - TransparentFX
@@ -22,9 +37,9 @@ TagManager:
   - Interactable
   - Surface
   - Bullet
-  - 
-  - 
-  - 
+  - Terrian
+  - IgnoreImpact
+  - Enemy
   - 
   - 
   - 

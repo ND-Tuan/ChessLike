@@ -100,6 +100,9 @@ MonoBehaviour:
   _Speed: 10
   _delay: 0.7
   _objectType: 1
+  Amount: 4
+  Randomize: 1
+  RandomRange: 2
 --- !u!96 &972567835096147243
 TrailRenderer:
   serializedVersion: 3

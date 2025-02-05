@@ -33,9 +33,9 @@ public class DropObject : MonoBehaviour, IInteractable
 
     public string InteractMessage => "Pick up";
 
-    public void TakeAction()
+    public void TakeAction(InteractionController Interacter)
     {
-        HolderController holderController = FindObjectOfType<HolderController>();
+        HolderController holderController = Interacter.GetComponentInChildren<HolderController>();
 
         if(holderController == null){
             return;

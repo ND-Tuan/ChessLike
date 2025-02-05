@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: SoulEating
   m_EditorClassIdentifier: 
   BuffName: Soul Eating
-  BuffID: 2
+  BuffID: 1
   description: Every time you kill an enemy, restore # Hp
+  BuffComponent: {fileID: 0}
+  ApplyTo: 1
   _BuffValue: 0a00000014000000
