@@ -6,7 +6,7 @@ using GLTF.Schema;
 using ObserverPattern;
 using UnityEngine;
 
-public enum TeleportDiraction {Right, Left, Combat, Rest, Boss}
+public enum TeleportDiraction {Right, Left, Combat, Rest, Boss, Final}
 
 public class Teleporter : MonoBehaviour, IInteractable
 {
@@ -64,26 +64,4 @@ public class Teleporter : MonoBehaviour, IInteractable
         player.transform.position += target;
 
     }
-
-
-    // async void  CamZoomIn(){
-       
-    //     while(virtualCamera.m_Lens.OrthographicSize > 6){
-    //         virtualCamera.m_Lens.OrthographicSize -=0.3f;
-    //         await Task.Delay(1);
-    //     }
-    //     virtualCamera.m_Lens.OrthographicSize = 6;
-    // }
-
-    // async void  CamZoomOut(){
-       
-    //     while(virtualCamera.m_Lens.OrthographicSize <= 20){
-    //         virtualCamera.m_Lens.OrthographicSize +=0.2f;
-    //         await Task.Delay(1);
-    //     }
-
-        
-    // }
-
-
 }

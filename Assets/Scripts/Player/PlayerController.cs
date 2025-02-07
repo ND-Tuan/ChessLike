@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using ObserverPattern;
 using System;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         TeleportIn,
         TeleportOut,
         Alive,
+        Transforming,
         Death
     }
     //Player Status
@@ -59,6 +61,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         CurrentState = PlayerState.TeleportIn;
         StateMachine();
         _CurrentHp = _MaxHp;
+        Observer.PostEvent(EvenID.DisplayPlayerHP, _CurrentHp, _MaxHp);
     
         _rigidbody = GetComponent<Rigidbody>();
         _animator = _Model.GetComponent<Animator>();
@@ -116,9 +119,14 @@ public class PlayerController : MonoBehaviour, IDamageable
                 await Task.Delay(1100);
                 CurrentState = PlayerState.TeleportIn;
                 break;
+
+            case PlayerState.Transforming:
+                _animator.SetBool("IsTransforming", true);
+                _animator.Play("Transform",-1, 0f);
+                break;
             
             case PlayerState.Death:
-                MenuUI.Instance.OnDisplayGameOver();
+                GameManager.Instance.GameOver();
                 break;
         }
     }
@@ -189,6 +197,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Dash()
     {
+         if(CurrentState != PlayerState.Alive) return;
 
         if ( _DashTimeCD <=0 && _isDashing){
 
@@ -264,6 +273,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             buff.BuffTrigger();
         }
     }
+    
 }
 
 public static class Helpers 

@@ -343,6 +343,7 @@ MonoBehaviour:
   _BulletMesh: {fileID: 4300000, guid: c872724105719f04cb3f8279f692c6f1, type: 2}
   _1HandGun: 1
   _FirePos: {fileID: 6570258138692744183}
+  _FireSound: {fileID: 8300000, guid: 5f9dfd1d1d536b9468bb7788c7408796, type: 3}
   _IsPlayer: 1
 --- !u!1 &6385353873466555813
 GameObject:

@@ -46,7 +46,7 @@ public class StatusUI : MonoBehaviour
         _PlayerCoinText.text = CoinAndAmmoManager.GetPlayerCoin().ToString();
     }
 
-    private void OnDisplayPlayerHp(object[] data)
+    public void OnDisplayPlayerHp(object[] data)
     {
         int hp = (int)data[0];
         int maxHp = (int)data[1];

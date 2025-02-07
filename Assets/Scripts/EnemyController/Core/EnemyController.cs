@@ -57,6 +57,7 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
         _LevelUpScale = GameManager.Instance.EnemyLevelUpScale;
         _CurrentHp = (int)(_MaxHp * _LevelUpScale[EnermyLevel]);
         Freezing = false;
+        walkPoint = transform.position;
 
         OnActive();
 

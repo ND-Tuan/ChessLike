@@ -13,20 +13,19 @@ public class MapMaker : MonoBehaviour
     [SerializeField] private List<GameObject> _SpecificBoardList;
     [SerializeField] private List<GameObject> _BossBoard;
     [SerializeField] private GameObject RestBoard;
+    [SerializeField] private GameObject FinalBoard;
     [SerializeField] private GameObject _NormalOptions;
     [SerializeField] private GameObject[] _NormalOptionsDisplay = new GameObject[2];
     [SerializeField] private Teleporter[] teleporter;
     [SerializeField] private GameObject RestOption;
     [SerializeField] private GameObject BossOption;
+    [SerializeField] private GameObject FinalOption;
     [SerializeField] private GameObject CombatCheck;
     [SerializeField] private GameObject surface;
 
     private GameObject _CurrentActiveBoard;
     private int[] _OptionArray = new int[2];
     private int _randomInt = 0;
-    
-
-
     
 
 
@@ -60,6 +59,8 @@ public class MapMaker : MonoBehaviour
     //Random các ải chơi tiếp theo
     public async void PrepareRandomOptions(object[] data){
         await Task.Delay(100);
+
+        //chuẩn bị ải nghỉ ngơi trước khi đến ải Boss
         if(GameManager.Instance._CurrentProgress == GameManager.Instance._NumBoardBeforeBoss+1){
             RestOption.SetActive(true);
             RestOption.transform.position = _CurrentActiveBoard.transform.position;
@@ -67,10 +68,18 @@ public class MapMaker : MonoBehaviour
             return;
         }
 
+        //chuẩn bị ải Boss
         if(GameManager.Instance._CurrentProgress == GameManager.Instance._NumBoardBeforeBoss+2){
             BossOption.SetActive(true);
             BossOption.transform.position = _CurrentActiveBoard.transform.position;
             BossOption.GetComponentInChildren<Animator>().SetBool("Play", true);
+            return;
+        }
+
+        if(GameManager.Instance._CurrentStage > _BossBoard.Count){
+            FinalOption.SetActive(true);
+            FinalOption.transform.position = _CurrentActiveBoard.transform.position;
+            FinalOption.GetComponentInChildren<Animator>().SetBool("Play", true);
             return;
         }
 
@@ -116,7 +125,7 @@ public class MapMaker : MonoBehaviour
         DeActivePreviousBoard();
 
         // Chọn ngẫu nhiên một ải chưa được kích hoạt từ danh sách 
-        if(Diraction != TeleportDiraction.Boss){
+        if(Diraction != TeleportDiraction.Boss && Diraction != TeleportDiraction.Final){
             
             _randomInt = Random.Range(0, _BasicBoardList.Count);
             while (_BasicBoardList[_randomInt].activeInHierarchy)
@@ -157,7 +166,12 @@ public class MapMaker : MonoBehaviour
                 _CurrentActiveBoard = _BossBoard[GameManager.Instance._CurrentStage-1];
                 break;
 
+            case TeleportDiraction.Final:
+                FinalBoard.SetActive(true);
+                FinalBoard.transform.position = newPos;
+                return;
         }
+
 
         if(Diraction == TeleportDiraction.Boss || Diraction == TeleportDiraction.Combat){
             surface.transform.position = newPos;

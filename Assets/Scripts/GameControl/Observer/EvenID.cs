@@ -37,10 +37,12 @@ public enum EvenID
     
 
     //Player
-    HealPlayer
+    HealPlayer,
 
     
     
     //Audio
+    BossMusic,
+    PlayFxSound,
 
 }

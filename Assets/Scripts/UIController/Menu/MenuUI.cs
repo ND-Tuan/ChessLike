@@ -31,7 +31,8 @@ public class MenuUI : MonoBehaviour
     private int _OnSelect = 0;
     private int[] _ItemsCost = new int[3];
 
-
+    [SerializeField] private GameObject _PauseUI;
+    [SerializeField] private GameObject PauseBuffContainer;
     //cửa hàng súng
     [SerializeField] private GameObject _GunStoreUI;
     [SerializeField] private TextMeshProUGUI _PlayerGold;
@@ -44,6 +45,7 @@ public class MenuUI : MonoBehaviour
 
     //Cường hóa buff
     [SerializeField] private GameObject _BuffUpgradeUI;
+    [SerializeField] private GameObject _BuffUpgradeContainer;
     [SerializeField] private TextMeshProUGUI _coin;
     [SerializeField] private TextMeshProUGUI _BuffUpgradeCost;
     [SerializeField] private TextMeshProUGUI _CurrentLevel;
@@ -59,9 +61,13 @@ public class MenuUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _BossName;
     [SerializeField] private Image _BossIcon;
 
-    //GameOver
+    //GameComplete
     [SerializeField] private GameObject _GameOverUI;
-    [SerializeField] private TextMeshProUGUI _timePlay;
+    [SerializeField] private GameObject _GameWinUI;
+
+    private bool IsAnyPanelActive = false;
+
+
     public static MenuUI Instance;
 
     // Start is called before the first frame update
@@ -73,7 +79,18 @@ public class MenuUI : MonoBehaviour
         } else if (Instance != this){
             Destroy(gameObject);
         }
+    }
 
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)){
+            if(_BlurBackground.activeInHierarchy){
+                OnClose();
+            } else {
+                OnPause();
+            }
+        }
     }
 
     
@@ -86,6 +103,17 @@ public class MenuUI : MonoBehaviour
         } else {
             _SelectedItemCost.color = Color.black;
         }
+    }
+
+    //======Pause=============================================
+    public void OnPause(){
+        _BlurBackground.SetActive(true);
+        _PauseUI.SetActive(true);
+
+        //Hiển thị buff
+        ListingBuff(PauseBuffContainer);
+
+        Time.timeScale = 0;
     }
 
 
@@ -170,7 +198,7 @@ public class MenuUI : MonoBehaviour
         Time.timeScale = 0;
 
         //lấy dữ liệu
-        _PlayerBuffEffect = GameManager.Instance.GetPlayerBuffList();
+        
         _Cost = cost;
 
         //hien thi thong tin
@@ -184,6 +212,14 @@ public class MenuUI : MonoBehaviour
         }
 
         //Hiển thị buff
+        ListingBuff(_BuffUpgradeContainer);
+        
+        if(_OnSelect >= _PlayerBuffEffect.Count) return;
+        DisplayUpgradeInfo(_OnSelect );
+    }
+
+    private void ListingBuff(GameObject container){
+        _PlayerBuffEffect = GameManager.Instance.GetPlayerBuffList();
         for (int i = 0; i < _PlayerBuffEffect.Count; i++)
         {
             var buff = _PlayerBuffEffect[i];
@@ -191,18 +227,18 @@ public class MenuUI : MonoBehaviour
             if (panel == null) return;
         
             panel.SetActive(true);
+            panel.transform.SetParent(container.transform);
             panel.GetComponent<BuffPanelDisplay>().DisplayBuff(buff.BuffName, buff.SetDescription(buff._isUpgraded ? 1 : 0), buff._isUpgraded);
             panel.GetComponent<BuffPanelDisplay>().SetBuffID(i);
         
             _BuffPanel.Add(panel);
         }
-        
-        if(_OnSelect >= _PlayerBuffEffect.Count) return;
-        DisplayUpgradeInfo(_OnSelect );
     }
 
     //Hiển thị thông tin cường hóa
     public void DisplayUpgradeInfo(int index){
+
+        if(_BuffUpgradeUI.activeInHierarchy == false) return;
         _OnSelect = index;
 
         BuffEffect buff = _PlayerBuffEffect[_OnSelect];
@@ -247,26 +283,25 @@ public class MenuUI : MonoBehaviour
 
 
     //===========GameOver=====================================
-    public void OnDisplayGameOver(){
+    public void OnDisplayGameOver(float timePlay, int buff, Sprite gunIcon){
         _BlurBackground.SetActive(true);
         _GameOverUI.SetActive(true);
         _GameOverUI.GetComponent<Animator>().Play("GameOverUI",-1, 0f);
 
-        int timePlay = (int)GameManager.Instance.timePlay;
-
-        int minutes = timePlay / 60;
-        int seconds = timePlay % 60;
-
-        string timeFormatted = string.Format("{0:D2}:{1:D2}", minutes, seconds);
-
-        _timePlay.text = timeFormatted;
+        _GameOverUI.GetComponent<GameEndPanel>().SetPanel(timePlay, buff, gunIcon , false);
         
         Time.timeScale = 0;
     }
 
-    public void ReTryBtn(){
-        //Reload current scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    //===========Game Complete================================
+    public void OnDisplayGameWin(float timePlay, int buff, Sprite gunIcon){
+        _BlurBackground.SetActive(true);
+        _GameWinUI.SetActive(true);
+        _GameWinUI.GetComponent<Animator>().Play("GameOverUI",-1, 0f);
+
+        _GameWinUI.GetComponent<GameEndPanel>().SetPanel(timePlay, buff, gunIcon , false);
+
+        Time.timeScale = 0;
     }
 
     public void Return(){
@@ -281,6 +316,7 @@ public class MenuUI : MonoBehaviour
         _BuffSelectUI.SetActive(false);
         _BuffUpgradeUI.SetActive(false);
         _BossIntroUI.SetActive(false);
+        _PauseUI.SetActive(false);
 
         foreach (var item in _BuffPanel)
         {

@@ -10,6 +10,8 @@ public class Queen : EnemyController
     [SerializeField] GameObject _RookAttack;
     [SerializeField] GameObject _BishopAttack;
     [SerializeField] private Animator[] _animators = new Animator[3];
+
+    [SerializeField] private AudioClip BossMusic;
     private bool IsAttacking = false;
     private int _currentAttack = 0;
 
@@ -22,6 +24,8 @@ public class Queen : EnemyController
         _PawmAttack.transform.localScale = Vector3.one;
         _BishopAttack.transform.parent = null;
         _BishopAttack.transform.localScale = Vector3.one;
+
+        Observer.PostEvent(EvenID.BossMusic, BossMusic);
 
     }
 

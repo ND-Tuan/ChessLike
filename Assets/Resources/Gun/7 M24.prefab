@@ -133,15 +133,16 @@ MonoBehaviour:
   Icon: {fileID: 601545320, guid: fdaea60aa2d43394c912ba955b77cd69, type: 3}
   Name: M24
   Cost: 350
-  AmmoCapacity: 4
+  AmmoCapacity: 1
   _FireRate:
-    _cooldownTime: 0.8
+    _cooldownTime: 1
   _BulletForce: 50
-  _Dmg: 99
+  _Dmg: 150
   _CritDmg: 120
   _BulletMesh: {fileID: 4300000, guid: 0c877f51dbe8b0c489b6e705c0a8f49b, type: 2}
   _1HandGun: 0
   _FirePos: {fileID: 2673270224661291738}
+  _FireSound: {fileID: 8300000, guid: 7afa524fd4402a643abb9d78314351be, type: 3}
   _IsPlayer: 1
 --- !u!1 &2791362027106005021
 GameObject:

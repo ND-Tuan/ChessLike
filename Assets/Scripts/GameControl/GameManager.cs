@@ -4,9 +4,14 @@ using ObserverPattern;
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
+using UnityEditor;
+using System.IO;
+using System.Threading.Tasks;
 
 public class GameManager : MonoBehaviour 
 {   
+    [SerializeField]private PlayerController Player;
+
     //Beginning Status
     [Header("---Beginning Status----------------------")]
     [SerializeField] private int _BeginningCoin;
@@ -31,6 +36,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<BuffEffect> _PlayerBuffList = new();
     public StatusEffectData _StatusEffectData;
 
+    //Record
+    
+
     //Singleton
     public static GameManager Instance { get; private set; }
 
@@ -54,10 +62,26 @@ public class GameManager : MonoBehaviour
         //Load Buff
         _BuffList = Resources.LoadAll<BuffEffect>("Buff").ToList();
 
-
+        //
+        
+      
         //Đăng ký Event
         Observer.AddListener(EvenID.CombatDone, OnCombatDone);
         Observer.AddListener(EvenID.BoardDone, CalculateProgress);
+    }
+
+    private List<float> GetRecordList(){
+        string path = Application.dataPath + "/Record.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            RecordData data = JsonUtility.FromJson<RecordData>(json);
+            return data.times;
+        }
+        else
+        {
+            return new List<float>();
+        }
     }
 
     void Update()
@@ -66,6 +90,35 @@ public class GameManager : MonoBehaviour
     }
 
     //Gameplay machenic=====================================
+    public void GameOver(){
+        Sprite gunIcon = Player.GetComponentInChildren<HolderController>().GetGunIcon();
+        MenuUI.Instance.OnDisplayGameOver(timePlay, _PlayerBuffList.Count(), gunIcon);
+    }
+
+    public async void GameWin(){
+        Player.CurrentState = PlayerController.PlayerState.Transforming;
+
+        await Task.Delay(2000);
+        Sprite gunIcon = Player.GetComponentInChildren<HolderController>().GetGunIcon();
+        MenuUI.Instance.OnDisplayGameWin(timePlay, _PlayerBuffList.Count(), gunIcon);
+        
+
+        //Save data
+        List<float> RecordList = GetRecordList();
+
+        RecordList.Add(timePlay);
+        RecordList = RecordList.OrderBy(t => t).ToList();
+
+        // Giữ lại tối đa 8 kỷ lục
+        if (RecordList.Count > 8)
+        {
+            RecordList = RecordList.GetRange(0, 8);
+        }
+
+        string json = JsonUtility.ToJson(new RecordData { times = RecordList });
+        File.WriteAllText(Application.dataPath + "/Record.json", json);
+    }
+
     public void OnCombatDone(object[] data){
         Chest.SetActive(true);
         Chest.transform.position = CurrentBoardPosition;
@@ -101,4 +154,9 @@ public class GameManager : MonoBehaviour
         _PlayerBuffList[index].UpgradeBuff();
     }
 
+}
+
+
+public class RecordData{
+    public List<float> times;
 }

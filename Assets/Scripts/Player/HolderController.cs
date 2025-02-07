@@ -95,4 +95,11 @@ public class HolderController : MonoBehaviour
     public List<GameObject> GetGunList(){
         return _GunList;
     }
+
+    public Sprite GetGunIcon(){
+        if(_OwnGuns[1] != null)
+            return _OwnGuns[1].GetComponent<GunController>().GetIcon();
+        else 
+            return _OwnGuns[0].GetComponent<GunController>().GetIcon();
+    }
 }

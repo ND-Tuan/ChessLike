@@ -30088,6 +30088,7 @@ MonoBehaviour:
   - {fileID: 5654947253098055511}
   - {fileID: 921235927317861789}
   - {fileID: 3382218458194278639}
+  BossMusic: {fileID: 8300000, guid: 3c3274236843a7b4ea56322745de4c9f, type: 3}
 --- !u!1 &8132315761210072440
 GameObject:
   m_ObjectHideFlags: 0

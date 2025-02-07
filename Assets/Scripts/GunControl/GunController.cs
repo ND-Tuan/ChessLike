@@ -19,6 +19,7 @@ public class GunController : MonoBehaviour
     [SerializeField] private Mesh _BulletMesh;
     [SerializeField] private bool _1HandGun;
     [SerializeField] private Transform _FirePos;
+    [SerializeField] private AudioClip _FireSound;
     private float Multiplier = 1;
 
     public bool _IsPlayer = true;
@@ -82,6 +83,9 @@ public class GunController : MonoBehaviour
         Rigidbody rb = BulletTmp.GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero; 
         rb.AddForce(_FirePos.transform.right * _BulletForce, ForceMode.Impulse);  //Gắn vector lực
+
+        //Chạy âm thanh
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _FireSound, _FirePos });
 
         //chạy Animation giật
         _handleAnimator.Play("GunRecoil", -1, 0f);
