@@ -10,6 +10,7 @@ public class HolderController : MonoBehaviour
     [SerializeField] private GameObject[] _OwnGuns = new GameObject[2];
     private bool _CurrentGunOrder = false;
     [SerializeField] private GameObject _2Hand;
+    [SerializeField] private AudioClip _PickUpSound;
 
 
     void Awake()
@@ -61,6 +62,8 @@ public class HolderController : MonoBehaviour
 
     public object[] PickUpGun(int id){
         //Nhặt súng
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _PickUpSound, transform});
+
         if(_OwnGuns[1]== null){
             _OwnGuns[1] = _GunList[id];
 

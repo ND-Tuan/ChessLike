@@ -6077,6 +6077,7 @@ MonoBehaviour:
   - {fileID: 4522129874237760117}
   - {fileID: 0}
   _2Hand: {fileID: 4473517783688822663}
+  _PickUpSound: {fileID: 8300000, guid: 7d08efe091594194da833a8ad441d254, type: 3}
 --- !u!95 &553654004
 Animator:
   serializedVersion: 5
@@ -12025,6 +12026,8 @@ MonoBehaviour:
   TargetSign: {fileID: 6223533049888036012}
   TeleportIn: {fileID: 1824740817}
   TeleportOut: {fileID: 501071258}
+  _TeleportInFx: {fileID: 8300000, guid: 1c44472ed46a8f648984154a60c327c3, type: 3}
+  _TeleportOutFx: {fileID: 8300000, guid: 08cba1275d201f444be8f30f73385791, type: 3}
 --- !u!136 &1090224226
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -15807,6 +15810,8 @@ MonoBehaviour:
     NumberEnemiesOfWave: 0200000003000000
   Chest: {fileID: 3175423518957441133}
   BoardDone: 1
+  _WinSound: {fileID: 8300000, guid: 90ee095461382c9419bc487bd39fc1bd, type: 3}
+  _LoseSound: {fileID: 8300000, guid: 198a7aee2762d6d47a61fd3b93388a3c, type: 3}
   _BuffList: []
   _PlayerBuffList: []
   _StatusEffectData: {fileID: 11400000, guid: 2e22861a88b718c4e884130a010b82a4, type: 2}
@@ -16067,6 +16072,7 @@ MonoBehaviour:
   _CoinAmount: 10
   _AmmoAmount: 5
   _ChanceToDropWeapon: 100
+  _OpenSound: {fileID: 8300000, guid: c9024746a42f1db4394a60b8e8c2b2cb, type: 3}
 --- !u!1 &1389247726
 GameObject:
   m_ObjectHideFlags: 0
@@ -28776,7 +28782,7 @@ Transform:
   m_Children:
   - {fileID: 4998818227479881873}
   m_Father: {fileID: 8629742260815839244}
-  m_LocalEulerAnglesHint: {x: 47.45888, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 72.06519, y: 0, z: 0}
 --- !u!1 &5145270337471420780
 GameObject:
   m_ObjectHideFlags: 0

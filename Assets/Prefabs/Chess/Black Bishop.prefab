@@ -202,9 +202,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _MaxHp: 300
-  _CurrentHp: 0
   EnermyLevel: 0
   _MaxDropAmount: 3
+  _AttackSound: {fileID: 8300000, guid: 995c7ef3bb2482340a2fe9a3ec07de75, type: 3}
   Surface:
     serializedVersion: 2
     m_Bits: 128
@@ -223,7 +223,7 @@ MonoBehaviour:
   _attackCooldown:
     _cooldownTime: 3
   _damage: 40
-  _isFreeze: 0
+  walkPointSet: 0
   _attackPoint: {fileID: 6910889289278242692}
   _force: 15
   _diractionNum: 3

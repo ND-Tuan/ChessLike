@@ -12,6 +12,8 @@ public class Queen : EnemyController
     [SerializeField] private Animator[] _animators = new Animator[3];
 
     [SerializeField] private AudioClip BossMusic;
+    [SerializeField] private AudioClip _RookAttackSound;
+
     private bool IsAttacking = false;
     private int _currentAttack = 0;
 
@@ -25,7 +27,7 @@ public class Queen : EnemyController
         _BishopAttack.transform.parent = null;
         _BishopAttack.transform.localScale = Vector3.one;
 
-        Observer.PostEvent(EvenID.BossMusic, BossMusic);
+        Observer.PostEvent(EvenID.ChangeMusic, BossMusic);
 
     }
 
@@ -69,10 +71,12 @@ public class Queen : EnemyController
         }
 
         _animators[_currentAttack].Play("SymbolSelected");
+        //âm thanh
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _AttackSound, transform });
 
         yield return new WaitForSeconds(0.5f);
         
-        // Step 2: Perform the attack
+       //Perform the attack
         switch (_currentAttack)
         {
             case 0:
@@ -107,6 +111,10 @@ public class Queen : EnemyController
     private void RookAttack()
     {
         _RookAttack.SetActive(true);
+
+        //Chay am thanh
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _RookAttackSound, transform });
+
         _RookAttack.transform.position = GameManager.Instance.CurrentBoardPosition;
 
         int Direction = Random.Range(0, 1);

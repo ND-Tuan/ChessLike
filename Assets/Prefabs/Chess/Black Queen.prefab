@@ -15051,6 +15051,7 @@ MonoBehaviour:
   - {fileID: 5033426075357002895}
   _diractionNum: 6
   _speed: 15
+  _AttackSound: {fileID: 8300000, guid: 0a95b4a9c2d3def40b71b63e977ba5e1, type: 3}
 --- !u!1 &4818310000339576687
 GameObject:
   m_ObjectHideFlags: 0
@@ -30061,6 +30062,7 @@ MonoBehaviour:
   _MaxHp: 800
   EnermyLevel: 0
   _MaxDropAmount: 10
+  _AttackSound: {fileID: 8300000, guid: 91b6d68aa585ea44abcadd51c1e7295a, type: 3}
   Surface:
     serializedVersion: 2
     m_Bits: 128
@@ -30089,6 +30091,7 @@ MonoBehaviour:
   - {fileID: 921235927317861789}
   - {fileID: 3382218458194278639}
   BossMusic: {fileID: 8300000, guid: 3c3274236843a7b4ea56322745de4c9f, type: 3}
+  _RookAttackSound: {fileID: 8300000, guid: d97eed6282312884abd124c85f82306f, type: 3}
 --- !u!1 &8132315761210072440
 GameObject:
   m_ObjectHideFlags: 0

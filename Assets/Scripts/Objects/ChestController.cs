@@ -12,6 +12,7 @@ public class ChestController : MonoBehaviour, IInteractable
 
     [Range(0, 100)]
     [SerializeField] private int _ChanceToDropWeapon;
+    [SerializeField] private AudioClip _OpenSound;
     private bool _IsOpen = false;
     
 
@@ -30,6 +31,8 @@ public class ChestController : MonoBehaviour, IInteractable
 
     public void TakeAction(InteractionController Interacter){
         if(_IsOpen) return;
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _OpenSound, transform });
+
         _animator.SetBool("Open", true);
         SpawnItem("Coin", _CoinAmount);
         SpawnItem("Ammo", _AmmoAmount);

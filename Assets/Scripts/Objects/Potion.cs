@@ -7,6 +7,7 @@ public class Potion : MonoBehaviour, IInteractable
 {
     [SerializeField] private int _HealAmount;
     [SerializeField] private LayerMask _Surface;
+    [SerializeField] private AudioClip _DrinkSound;
 
     public string InteractMessage => "Drink";
 
@@ -20,6 +21,7 @@ public class Potion : MonoBehaviour, IInteractable
 
     public void TakeAction(InteractionController Interacter)
     {
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _DrinkSound, transform});
         Observer.PostEvent(EvenID.HealPlayer, _HealAmount);
         gameObject.SetActive(false);
     }

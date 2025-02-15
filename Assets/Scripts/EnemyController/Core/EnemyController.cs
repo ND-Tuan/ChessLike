@@ -14,6 +14,8 @@ public abstract class EnemyController : MonoBehaviour, IDamageable
     protected float[] _LevelUpScale = {1, 2, 3};
     [SerializeField] private int _MaxDropAmount;
 
+    [SerializeField] protected AudioClip _AttackSound;
+
     [Header("---Enemy AI--------------------------")]
 
     protected NavMeshAgent _agent;

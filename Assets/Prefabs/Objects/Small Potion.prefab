@@ -273,6 +273,7 @@ MonoBehaviour:
   _Surface:
     serializedVersion: 2
     m_Bits: 128
+  _DrinkSound: {fileID: 8300000, guid: 4cba881a9b26c724586d72474b7c0c47, type: 3}
 --- !u!65 &22910835689990968
 BoxCollider:
   m_ObjectHideFlags: 0

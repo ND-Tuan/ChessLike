@@ -42,7 +42,8 @@ public enum EvenID
     
     
     //Audio
-    BossMusic,
+    ChangeMusic,
     PlayFxSound,
+    StopMusic,
 
 }

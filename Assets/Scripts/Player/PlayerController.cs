@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] private GameObject TargetSign;
     [SerializeField] private ParticleSystem TeleportIn;
     [SerializeField] private ParticleSystem TeleportOut;
+    [SerializeField] private AudioClip _TeleportInFx;
+    [SerializeField] private AudioClip _TeleportOutFx;
     private bool TargetMode;
     private GameObject Target;
 
@@ -106,6 +108,9 @@ public class PlayerController : MonoBehaviour, IDamageable
                 TeleportIn.transform.position = transform.position;
                 TeleportIn.Play();
 
+                //Chạy âm thanh
+                Observer.PostEvent(EvenID.PlayFxSound, _TeleportInFx, transform);
+
                 //Chuyển trạng thái
                 await Task.Delay(400);
                 CurrentState = PlayerState.Alive;
@@ -113,8 +118,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
             case PlayerState.TeleportOut:
                 ToggleVisual(false);
+
+                //chạy particle
                 TeleportOut.transform.position = transform.position;
                 TeleportOut.Play();
+
+                //Chạy âm thanh
+                Observer.PostEvent(EvenID.PlayFxSound, _TeleportOutFx, transform);
 
                 await Task.Delay(1100);
                 CurrentState = PlayerState.TeleportIn;

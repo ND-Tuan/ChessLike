@@ -5501,9 +5501,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _MaxHp: 350
-  _CurrentHp: 0
   EnermyLevel: 0
   _MaxDropAmount: 3
+  _AttackSound: {fileID: 8300000, guid: e1e7f3eb89f65574b8d3f34cb00ac1ed, type: 3}
   Surface:
     serializedVersion: 2
     m_Bits: 128
@@ -5522,7 +5522,7 @@ MonoBehaviour:
   _attackCooldown:
     _cooldownTime: 3.5
   _damage: 60
-  _isFreeze: 0
+  walkPointSet: 0
   _attackAnimator: {fileID: 3684988217427631360}
   _SlashEffect: {fileID: 3215749051649275433}
 --- !u!1 &8661299949646532952

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ObserverPattern;
 using UnityEngine;
 
 public class Rook : EnemyController
@@ -52,6 +53,9 @@ public class Rook : EnemyController
     private IEnumerator AttackProcess(){
         _cautionLaser.gameObject.SetActive(true);
         _FireEffect.Play();
+
+        //Chay am thanh
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _AttackSound, _attackPoint });
 
         //Nháy cảnh báo sắp bắn
         yield return new WaitForSeconds(0.5f);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ObserverPattern;
 using UnityEngine;
 
 public class Bishop : EnemyController
@@ -24,9 +25,11 @@ public class Bishop : EnemyController
     }
 
     public void Attack(float multiplier){
-    
+        
         if(_handleAnimator != null)
             _handleAnimator.Play("Cast", -1, 0);
+
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _AttackSound, _attackPoint });
 
        // Tính góc bắn
         float initialAngle = -spreadAngle / 2; 

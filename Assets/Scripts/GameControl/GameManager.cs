@@ -29,6 +29,9 @@ public class GameManager : MonoBehaviour
     public List<EnemyWaveSetting> _enemyWaveSetting;
     [SerializeField] private GameObject Chest;
     public bool BoardDone;
+
+    [SerializeField] private AudioClip _WinSound;
+    [SerializeField] private AudioClip _LoseSound;
     
     //Buff manager
     [Header("---Buff Manager----------------------")]
@@ -91,6 +94,9 @@ public class GameManager : MonoBehaviour
 
     //Gameplay machenic=====================================
     public void GameOver(){
+        Observer.PostEvent(EvenID.PlayFxSound, _LoseSound, Player.transform);
+        Observer.PostEvent(EvenID.StopMusic);
+
         Sprite gunIcon = Player.GetComponentInChildren<HolderController>().GetGunIcon();
         MenuUI.Instance.OnDisplayGameOver(timePlay, _PlayerBuffList.Count(), gunIcon);
     }
@@ -99,6 +105,9 @@ public class GameManager : MonoBehaviour
         Player.CurrentState = PlayerController.PlayerState.Transforming;
 
         await Task.Delay(2000);
+        Observer.PostEvent(EvenID.PlayFxSound, _WinSound, Player.transform);
+        Observer.PostEvent(EvenID.StopMusic);
+
         Sprite gunIcon = Player.GetComponentInChildren<HolderController>().GetGunIcon();
         MenuUI.Instance.OnDisplayGameWin(timePlay, _PlayerBuffList.Count(), gunIcon);
         

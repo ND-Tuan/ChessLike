@@ -16,8 +16,9 @@ public class AudioManager : MonoBehaviour
 
         Observer.AddListener(EvenID.BeginCombat, OnBeginCombat);
         Observer.AddListener(EvenID.CombatDone, OnEndCombat);
-        Observer.AddListener(EvenID.BossMusic, OnPlayBossMusic);
+        Observer.AddListener(EvenID.ChangeMusic, OnPlayMusic);
         Observer.AddListener(EvenID.PlayFxSound, PlayFxSound);
+        Observer.AddListener(EvenID.StopMusic, StopMusic);
     }
 
     void Start()
@@ -30,21 +31,28 @@ public class AudioManager : MonoBehaviour
 
     private void OnBeginCombat(object[] data)
     {
-        // MusicSource.clip = BattleMusic;
-        // MusicSource.Play();
+        if(MusicSource.clip == BattleMusic) return;
+        MusicSource.clip = BattleMusic;
+        MusicSource.Play();
     }
 
     private void OnEndCombat(object[] data)
     {
+        if(MusicSource.clip == OffBattleMusic) return;
         MusicSource.clip = OffBattleMusic;
         MusicSource.Play();
     }
 
-    private void OnPlayBossMusic(object[] data)
+    private void OnPlayMusic(object[] data)
     {
-        AudioClip BossMusic = (AudioClip)data[0];
-        MusicSource.clip = BossMusic;
+        AudioClip Music = (AudioClip)data[0];
+        MusicSource.clip = Music;
         MusicSource.Play();
+    }
+
+    private void StopMusic(object[] data)
+    {
+        MusicSource.Stop();
     }
 
     private void PlayFxSound(object[] data)

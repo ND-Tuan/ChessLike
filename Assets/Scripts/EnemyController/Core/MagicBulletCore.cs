@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ObserverPattern;
 using UnityEngine;
 
 public class MagicBulletCore : MonoBehaviour
@@ -8,6 +9,7 @@ public class MagicBulletCore : MonoBehaviour
     [SerializeField] private Transform[] core;
     [SerializeField] private int _diractionNum;
     [SerializeField] private float _speed;
+    [SerializeField] private AudioClip _AttackSound;
 
 
     public void Attack(int Damage){
@@ -48,6 +50,9 @@ public class MagicBulletCore : MonoBehaviour
                 Rigidbody rg = bullet.GetComponent<Rigidbody>();
                 rg.velocity = Vector3.zero; 
                 rg.AddForce(direction * _speed, ForceMode.Impulse);
+
+                //Chạy âm thanh
+                Observer.PostEvent(EvenID.PlayFxSound, new object[] { _AttackSound, firePos });
             }
 
             await Task.Delay(100);

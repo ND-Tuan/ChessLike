@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ObserverPattern;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -37,6 +38,10 @@ public class Knight : EnemyController
 
     private IEnumerator AttackProcess(){
         yield return new WaitForSeconds(0.77f);
+        
+        //Chay am thanh
+        Observer.PostEvent(EvenID.PlayFxSound, new object[] { _AttackSound, transform });
+
         _SlashEffect.SetActive(true);
         GetComponentInChildren<DmgWithTrigger>().SetDamage((int)(_damage * _LevelUpScale[EnermyLevel]));
 

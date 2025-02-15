@@ -50,7 +50,7 @@ public class DropObject : MonoBehaviour, IInteractable
 
         SetDrop((GameObject)data[1], (int)data[0]);
 
-        transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;  
+        transform.position = Interacter.transform.position;  
     }
 
     public void SetDrop(GameObject Model, int id){
